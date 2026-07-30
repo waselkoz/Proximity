@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Premium Digital Experiences & UI/UX Design",
 };
 
+import GlobalTransition from "@/components/GlobalTransition";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>
+        <GlobalTransition />
         <Navbar />
         <main>{children}</main>
         <Footer />

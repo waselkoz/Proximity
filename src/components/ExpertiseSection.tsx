@@ -2,9 +2,9 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
-import MorphText from '@/components/ui/morph-text';
 import { Code2, Palette, Film, Sparkles, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import CodeRain from '@/components/ui/CodeRain';
 
 // --- Ultra Premium 3D Tilt Card with Spotlight ---
 function SpotlightCard({ 
@@ -117,35 +117,7 @@ function SpotlightCard({
   );
 }
 
-const CODE_FRAGMENTS = ["const", "=>", "{...}", "</div>", "return", "await", "import", "fetch()", "next()", "React"];
-
-function CodeRain() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-black/60">
-      {CODE_FRAGMENTS.map((text, i) => (
-        <motion.div
-          key={i}
-          className="absolute font-mono font-black whitespace-nowrap drop-shadow-[0_0_8px_rgba(220,20,60,0.8)]"
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 500, opacity: [0, 1, 1, 0] }}
-          transition={{
-            duration: 3 + (i % 3),
-            repeat: Infinity,
-            delay: i * 0.4,
-            ease: "linear",
-          }}
-          style={{ 
-            left: `${(i * 17) % 85 + 5}%`,
-            fontSize: `${10 + (i % 8)}px`,
-            color: i % 2 === 0 ? 'rgba(220,20,60,0.8)' : 'rgba(220,20,60,0.4)'
-          }}
-        >
-          {text}
-        </motion.div>
-      ))}
-    </div>
-  );
-}
+// Local CodeRain removed, using global CodeRain from @/components/ui/CodeRain
 
 function GraphicDesignUI() {
   return (
@@ -414,7 +386,7 @@ function ScrollTimeline() {
   const lineHeight = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-5xl mx-auto mt-20 mb-32 h-[800px] md:h-[1200px]">
+    <div ref={containerRef} className="relative w-full max-w-5xl mx-auto mt-4 mb-32 h-[800px] md:h-[1200px]">
       
       {/* Background Track Line */}
       <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-[2px] bg-white/10 -translate-x-1/2 rounded-full" />
@@ -456,24 +428,15 @@ export default function ExpertiseSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/80 text-xs font-semibold tracking-widest uppercase mb-8 backdrop-blur-md"
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-black/40 text-white/80 text-xs font-light tracking-[0.2em] uppercase mb-8 backdrop-blur-xl shadow-[0_0_20px_rgba(255,255,255,0.05)]"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#DC143C]" />
+          <Sparkles className="w-4 h-4 text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
           <span>Our Expertise</span>
         </motion.div>
 
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-4 md:mb-6">
+        <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-white/90 mb-4 md:mb-6 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
           Everything starts with
         </h2>
-        
-        <div className="h-20 md:h-28 w-full flex justify-center items-center overflow-visible">
-          <MorphText 
-            words={["Design.", "Strategy.", "Innovation.", "Proximity."]} 
-            fontSize="clamp(2.5rem, 6vw, 6rem)" 
-            textClassName="font-black text-[#DC143C] drop-shadow-[0_0_20px_rgba(220,20,60,0.3)] tracking-tighter"
-            interval={3500}
-          />
-        </div>
       </div>
 
       {/* Scroll-Linked Timeline */}
@@ -497,7 +460,7 @@ export default function ExpertiseSection() {
         
         {/* Card 1: Development */}
         <SpotlightCard delay={0.1} className="md:col-span-8 min-h-[360px]">
-          <CodeRain />
+          <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-black/60" durationMultiplier={1.5} />
 
           <div className="relative z-10 flex flex-col mb-6">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_30px_rgba(220,20,60,0.3)] transition-all duration-500 mb-6">
@@ -518,7 +481,10 @@ export default function ExpertiseSection() {
             ))}
           </div>
           
-          <div className="relative z-10 mt-auto flex items-center text-sm font-bold text-white group-hover:text-[#DC143C] transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-fit px-6 py-3 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C]/20 group-hover:shadow-[0_0_20px_rgba(220,20,60,0.4)] backdrop-blur-md">
+          <div 
+            onClick={() => window.dispatchEvent(new CustomEvent('trigger-dev-transition'))}
+            className="cursor-pointer relative z-10 mt-auto flex items-center text-sm font-bold text-white group-hover:text-[#DC143C] transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-fit px-6 py-3 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C]/20 group-hover:shadow-[0_0_20px_rgba(220,20,60,0.4)] backdrop-blur-md"
+          >
             Discover More
             <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
           </div>
