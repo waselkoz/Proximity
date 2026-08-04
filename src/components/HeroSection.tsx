@@ -21,6 +21,7 @@ export default function HeroSection() {
               src="/logo.jpg"
               alt="Proximity Logo"
               fill
+              sizes="(max-width: 768px) 320px, 448px"
               className="object-contain hover:scale-105 transition-transform duration-700 ease-out mix-blend-multiply"
               priority
             />
