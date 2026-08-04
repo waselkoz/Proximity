@@ -53,8 +53,8 @@ function SpotlightCard({
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "100px" }}
+      transition={{ duration: 0.4, delay: delay * 0.5, ease: [0.22, 1, 0.36, 1] }}
       style={{ perspective: 2000 }}
       className={cn("w-full h-full cursor-pointer group", className)}
     >
@@ -75,7 +75,7 @@ function SpotlightCard({
         
         {/* Outer Crimson Glow Spotlight */}
         <motion.div
-          className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-500 group-hover:opacity-100 mix-blend-screen"
+          className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100 mix-blend-screen"
           style={{
             transform: "translateZ(0)",
             background: useMotionTemplate`
@@ -90,7 +90,7 @@ function SpotlightCard({
         
         {/* Inner White Spotlight for crisp edges */}
         <motion.div
-          className="pointer-events-none absolute inset-0 rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-0 rounded-[2.5rem] opacity-0 transition duration-150 group-hover:opacity-100"
           style={{
             transform: "translateZ(0)",
             background: useMotionTemplate`
@@ -121,7 +121,7 @@ function SpotlightCard({
 
 function GraphicDesignUI() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-black/60 font-mono text-xs">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60 font-mono text-xs">
       
       {/* Figma/Illustrator Bounding Box */}
       <motion.div 
@@ -197,7 +197,7 @@ const KEYFRAMES = [
 
 function VideoEditingUI() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-black/60 font-mono text-xs">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60 font-mono text-xs">
       
       {/* Floating Parameters */}
       <motion.div 
@@ -416,147 +416,300 @@ function ScrollTimeline() {
   );
 }
 
-export default function ExpertiseSection() {
+function CinematicParticles({ scrollYProgress }: { scrollYProgress: any }) {
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -600]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -1000]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -400]);
+
+  const dustParticles = Array.from({ length: 30 }).map((_, i) => ({
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    delay: Math.random() * 5,
+    duration: 3 + Math.random() * 5,
+  }));
+
   return (
-    <section className="relative w-full bg-[#030303] py-32 md:py-48 flex flex-col items-center overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
+      {/* Huge Out of Focus Orbs */}
+      <motion.div style={{ y: y1 }} className="absolute top-[20%] left-[5%] w-[400px] h-[400px] bg-[#DC143C]/20 rounded-full blur-[120px]" />
+      <motion.div style={{ y: y2 }} className="absolute top-[60%] right-[5%] w-[500px] h-[500px] bg-white/5 rounded-full blur-[150px]" />
+      <motion.div style={{ y: y3 }} className="absolute bottom-[10%] left-[20%] w-[300px] h-[300px] bg-[#DC143C]/10 rounded-full blur-[100px]" />
       
-      {/* Subtle Grid Pattern Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-70 z-0 pointer-events-none" />
+      {/* Tiny Dust Particles */}
+      {dustParticles.map((p, i) => (
+        <motion.div 
+          key={i}
+          animate={{
+            y: [0, -30, 0],
+            opacity: [0, 0.8, 0],
+            scale: [0.8, 1.2, 0.8]
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            delay: p.delay,
+            ease: "easeInOut"
+          }}
+          className="absolute w-1 h-1 bg-white rounded-full blur-[1px] shadow-[0_0_10px_white]"
+          style={{ top: p.top, left: p.left }}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default function ExpertiseSection() {
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const smoothProgress = useSpring(scrollYProgress, { damping: 20, stiffness: 100 });
+
+  // Cinematic Parallax Transforms
+  const coreScale = useTransform(smoothProgress, [0, 0.5, 1], [0.8, 1.2, 1.5]);
+  const coreOpacity = useTransform(smoothProgress, [0, 0.5, 1], [0.3, 1, 0]);
+  const coreRotate = useTransform(smoothProgress, [0, 1], [0, 180]);
+
+  // Uniform parallax speed so they drift together over the background without colliding
+  const card1Y = useTransform(smoothProgress, [0, 1], [200, -200]);
+  const card2Y = useTransform(smoothProgress, [0, 1], [200, -200]);
+  const card3Y = useTransform(smoothProgress, [0, 1], [200, -200]);
+  const card4Y = useTransform(smoothProgress, [0, 1], [200, -200]);
+  
+  const bgTextY = useTransform(smoothProgress, [0, 1], [100, -300]);
+
+  return (
+    <section ref={containerRef} className="relative w-full bg-[#000000] py-32 md:py-48 flex flex-col items-center overflow-hidden">
       
-      {/* Gentle Red Glow Background Accent */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] max-w-[1000px] h-[40vh] bg-[#DC143C]/10 rounded-full blur-[120px] pointer-events-none z-0" />
+      {/* CINEMATIC BARS */}
+      <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-black via-black/80 to-transparent z-40 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-black via-black/80 to-transparent z-40 pointer-events-none" />
+
+      {/* THE CORE (Singularity Background) */}
+      <motion.div 
+        style={{ scale: coreScale, opacity: coreOpacity, rotate: coreRotate }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] pointer-events-none z-0 mix-blend-screen flex items-center justify-center"
+      >
+        <div className="absolute w-[20%] h-[20%] bg-black rounded-full shadow-[0_0_120px_100px_rgba(220,20,60,0.9)] z-10" />
+        <div className="absolute w-full h-full rounded-full border-[2px] border-[#DC143C]/20 border-t-[#DC143C]/80 shadow-[inset_0_0_100px_rgba(220,20,60,0.3)] blur-[4px]" />
+        <div className="absolute w-[70%] h-[70%] rounded-full border-[1px] border-white/10 border-l-white/40 shadow-[0_0_80px_rgba(255,255,255,0.1)] blur-[2px] -rotate-45" />
+        <div className="absolute w-[40%] h-[40%] rounded-full border-[3px] border-[#DC143C]/30 border-b-[#DC143C] shadow-[0_0_50px_rgba(220,20,60,0.6)] blur-[1px] rotate-90" />
+      </motion.div>
+
+      {/* MASSIVE BACKGROUND TEXT */}
+      <motion.div 
+        style={{ y: bgTextY }}
+        className="absolute top-[30%] left-0 w-full flex justify-center pointer-events-none z-0 opacity-10"
+      >
+        <h1 className="text-[20vw] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-black tracking-tighter leading-none select-none">
+          ORIGIN
+        </h1>
+      </motion.div>
+      
+      {/* Noise and Film Grain */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06] mix-blend-overlay z-50 pointer-events-none" />
+      
+      {/* Floating Particles */}
+      <CinematicParticles scrollYProgress={smoothProgress} />
 
       {/* Header with MorphText */}
-      <div className="relative z-20 text-center px-6 mb-20 md:mb-32 flex flex-col items-center w-full max-w-4xl mx-auto">
+      <div className="relative z-30 text-center px-6 mb-20 md:mb-32 flex flex-col items-center w-full max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-black/40 text-white/80 text-xs font-light tracking-[0.2em] uppercase mb-8 backdrop-blur-xl shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 bg-black/60 text-white/90 text-sm font-medium tracking-[0.3em] uppercase mb-10 backdrop-blur-2xl shadow-[0_0_30px_rgba(220,20,60,0.3)]"
         >
-          <Sparkles className="w-4 h-4 text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
-          <span>Our Expertise</span>
+          <Sparkles className="w-5 h-5 text-[#DC143C] drop-shadow-[0_0_8px_rgba(220,20,60,0.8)]" />
+          <span>The Origin</span>
         </motion.div>
 
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-white/90 mb-4 md:mb-6 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
-          Everything starts with
+        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/30 mb-6 drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+          Where Everything Begins.
         </h2>
       </div>
 
       {/* Scroll-Linked Timeline */}
       <ScrollTimeline />
 
-      {/* Transition Text between Timeline and Cards */}
-      <div className="relative z-20 text-center px-6 mb-20 md:mb-28 flex flex-col items-center w-full max-w-4xl mx-auto">
+      {/* Transition Text */}
+      <div className="relative z-30 text-center px-6 mb-32 flex flex-col items-center w-full max-w-4xl mx-auto">
         <motion.p
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 1, ease: "easeOut" }}
           className="text-3xl md:text-5xl lg:text-6xl font-light text-white/80 leading-tight tracking-tight"
         >
-          Here at <span className="font-bold text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">Proximity</span>, we offer <span className="text-[#DC143C] font-medium italic">all of these services</span>.
+          Here at <span className="font-bold text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">Proximity</span>, we engineer <br/>
+          <span className="text-[#DC143C] font-semibold italic text-5xl md:text-7xl lg:text-8xl mt-4 block">the extraordinary.</span>
         </motion.p>
       </div>
 
-      {/* Modern Bento/Grid Cards Section */}
-      <div className="relative w-full max-w-6xl grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 px-6 z-20 group/grid">
+      {/* Cinematic Parallax Cards Section */}
+      <div className="relative w-full max-w-[1600px] mx-auto flex flex-col px-6 z-30 group/grid pb-48 pt-32 h-auto gap-24 md:gap-40">
         
-        {/* Card 1: Development */}
-        <SpotlightCard delay={0.1} className="md:col-span-8 min-h-[360px]">
-          <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-black/60" durationMultiplier={1.5} />
+        {/* The Motherboard Connection Spine */}
+        <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-[2px] bg-white/5 md:-translate-x-1/2 z-0 hidden md:block">
+          {/* Animated Energy Pulse */}
+          <motion.div 
+            className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-transparent via-[#DC143C] to-transparent shadow-[0_0_30px_rgba(220,20,60,1)] rounded-full opacity-50 group-hover/grid:opacity-100 transition-opacity duration-500"
+            animate={{ top: ['-30%', '130%'] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+          />
+        </div>
+        
+        {/* Card 1: Development - Massive on the Left */}
+        <motion.div style={{ y: card1Y }} className="w-full md:w-[80%] self-start relative z-10">
+          <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[150px] rounded-full z-0 pointer-events-none" />
+          <SpotlightCard delay={0.1} className="relative z-10 min-h-[550px]">
+            <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60" durationMultiplier={1.5} />
 
-          <div className="relative z-10 flex flex-col mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_30px_rgba(220,20,60,0.3)] transition-all duration-500 mb-6">
-              <Code2 className="w-8 h-8 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+            <div className="relative z-10 flex flex-col mb-8">
+              <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_40px_rgba(220,20,60,0.3)] transition-all duration-500 mb-6">
+                <Code2 className="w-10 h-10 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+              </div>
+              <h3 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight">Development</h3>
             </div>
-            <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight">Development</h3>
-          </div>
-          
-          <p className="relative z-10 text-white/60 leading-relaxed font-light text-lg mb-6 max-w-lg">
-            We architect <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">blazing-fast</span>, scalable, and highly accessible web applications. From custom dashboards to high-converting stores, we build with meticulous attention to modern frameworks.
-          </p>
-
-          <div className="flex flex-wrap gap-2 mb-10 relative z-10">
-            {["Web Apps", "E-Commerce", "Landing Pages", "Custom APIs"].map((tag, i) => (
-              <span key={i} className="px-3 py-1 text-xs font-semibold text-white/60 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
-                {tag}
-              </span>
-            ))}
-          </div>
-          
-          <div 
-            onClick={() => window.dispatchEvent(new CustomEvent('trigger-dev-transition'))}
-            className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-sm font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-8 py-4 md:py-3 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_20px_rgba(220,20,60,0.6)] backdrop-blur-md"
-          >
-            Discover More
-            <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-          </div>
-        </SpotlightCard>
-
-        {/* Card 2: Graphic Design */}
-        <SpotlightCard delay={0.2} className="md:col-span-4 min-h-[360px]">
-          <GraphicDesignUI />
-
-          <div className="relative z-10 flex flex-col mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_30px_rgba(220,20,60,0.3)] transition-all duration-500 mb-6">
-              <Palette className="w-8 h-8 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
-            </div>
-            <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight">Design</h3>
-          </div>
-          
-          <p className="relative z-10 text-white/60 leading-relaxed font-light text-lg mb-6 flex-grow">
-            Crafting <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">distinctive visual identities</span> and breathtaking aesthetics that resonate with your core audience.
-          </p>
-          
-          <div className="flex flex-wrap gap-2 mb-10 relative z-10">
-            {["UI/UX", "Branding", "Social Media", "Logos"].map((tag, i) => (
-              <span key={i} className="px-3 py-1 text-xs font-semibold text-white/60 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          <div 
-            onClick={() => window.dispatchEvent(new CustomEvent('trigger-design-transition'))}
-            className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-sm font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-8 py-4 md:py-3 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_20px_rgba(220,20,60,0.6)] backdrop-blur-md"
-          >
-            Discover More
-            <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-          </div>
-        </SpotlightCard>
-
-        {/* Card 3: Video Editing */}
-        <SpotlightCard delay={0.3} className="md:col-span-12 min-h-[300px]">
-          <VideoEditingUI />
-
-          <div className="relative z-10 flex flex-col max-w-2xl flex-grow">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_30px_rgba(220,20,60,0.3)] transition-all duration-500 mb-6">
-              <Film className="w-8 h-8 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
-            </div>
-            <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight mb-4">Video Editing</h3>
-            <p className="text-white/60 leading-relaxed font-light text-lg mb-6">
-              Delivering <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">cinematic storytelling</span> with dynamic cuts, seamless transitions, and professional color grading to engage viewers emotionally.
-            </p>
             
-            <div className="flex flex-wrap gap-2 mb-8">
-              {["Promos", "Reels / TikToks", "Color Grading", "VFX"].map((tag, i) => (
-                <span key={i} className="px-3 py-1 text-xs font-semibold text-white/60 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
+            <p className="relative z-10 text-white/60 leading-relaxed font-light text-xl md:text-2xl mb-8 max-w-2xl">
+              We architect <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">blazing-fast</span>, scalable, and highly accessible web applications. From custom dashboards to high-converting stores, we build with meticulous attention to modern frameworks.
+            </p>
+
+            <div className="flex flex-wrap gap-3 mb-12 relative z-10">
+              {["Web Apps", "E-Commerce", "Landing Pages", "Custom APIs"].map((tag, i) => (
+                <span key={i} className="px-4 py-2 text-sm font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
                   {tag}
                 </span>
               ))}
             </div>
-          </div>
-          
-          <div 
-            onClick={() => window.dispatchEvent(new CustomEvent('trigger-video-transition'))}
-            className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-sm font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-8 py-4 md:py-3 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_20px_rgba(220,20,60,0.6)] backdrop-blur-md"
-          >
-            Discover More
-            <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-          </div>
-        </SpotlightCard>
+            
+            <div 
+              onClick={() => window.dispatchEvent(new CustomEvent('trigger-dev-transition'))}
+              className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-base font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-10 py-5 md:py-4 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_30px_rgba(220,20,60,0.6)] backdrop-blur-md"
+            >
+              Discover More
+              <ArrowRight className="w-5 h-5 ml-3 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+            </div>
+          </SpotlightCard>
+        </motion.div>
+
+        {/* Card 2: Graphic Design - Overlapping on the Right */}
+        <motion.div style={{ y: card2Y }} className="w-full md:w-[80%] self-end relative z-20">
+          <div className="absolute -inset-32 bg-white/5 blur-[150px] rounded-full z-0 pointer-events-none" />
+          <SpotlightCard delay={0.3} className="relative z-10 min-h-[550px]">
+            <GraphicDesignUI />
+
+            <div className="relative z-10 flex flex-col mb-8">
+              <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_40px_rgba(220,20,60,0.3)] transition-all duration-500 mb-6">
+                <Palette className="w-10 h-10 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+              </div>
+              <h3 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight">Design</h3>
+            </div>
+            
+            <p className="relative z-10 text-white/60 leading-relaxed font-light text-xl md:text-2xl mb-8 flex-grow">
+              Crafting <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">distinctive visual identities</span> and breathtaking aesthetics that resonate with your core audience.
+            </p>
+            
+            <div className="flex flex-wrap gap-3 mb-12 relative z-10">
+              {["UI/UX", "Branding", "Social Media", "Logos"].map((tag, i) => (
+                <span key={i} className="px-4 py-2 text-sm font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div 
+              onClick={() => window.dispatchEvent(new CustomEvent('trigger-design-transition'))}
+              className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-base font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-10 py-5 md:py-4 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_30px_rgba(220,20,60,0.6)] backdrop-blur-md"
+            >
+              Discover More
+              <ArrowRight className="w-5 h-5 ml-3 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+            </div>
+          </SpotlightCard>
+        </motion.div>
+
+        {/* Card 3: Video Editing - Centered, Massive Finale */}
+        <motion.div style={{ y: card3Y }} className="w-full md:w-[80%] self-start relative z-30">
+          <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[150px] rounded-full z-0 pointer-events-none" />
+          <SpotlightCard delay={0.5} className="relative z-10 min-h-[600px]">
+            <VideoEditingUI />
+
+            <div className="relative z-10 flex flex-col max-w-4xl flex-grow items-center text-center">
+              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_50px_rgba(220,20,60,0.3)] transition-all duration-500 mb-8 mt-4">
+                <Film className="w-12 h-12 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+              </div>
+              <h3 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight mb-6">Video Editing</h3>
+              <p className="text-white/60 leading-relaxed font-light text-xl md:text-3xl mb-10 max-w-3xl">
+                Delivering <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">cinematic storytelling</span> with dynamic cuts, seamless transitions, and professional color grading to engage viewers emotionally.
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-3 mb-12">
+                {["Promos", "Reels / TikToks", "Color Grading", "VFX"].map((tag, i) => (
+                  <span key={i} className="px-5 py-2 text-sm font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            <div 
+              onClick={() => window.dispatchEvent(new CustomEvent('trigger-video-transition'))}
+              className="cursor-pointer relative z-10 mt-auto flex items-center justify-center text-base font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit mx-auto px-12 py-5 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_40px_rgba(220,20,60,0.6)] backdrop-blur-md"
+            >
+              Discover More
+              <ArrowRight className="w-5 h-5 ml-3 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+            </div>
+          </SpotlightCard>
+        </motion.div>
+
+        {/* Card 4: 360° Digital Launch - The Ultimate Boss Card */}
+        <motion.div style={{ y: card4Y }} className="w-full self-center relative z-40 mb-32 md:mb-0">
+          <div className="absolute -inset-32 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)] blur-[150px] rounded-full z-0 pointer-events-none" />
+          <SpotlightCard delay={0.7} className="relative z-10 min-h-[600px] ring-2 ring-white/10 group-hover:ring-[#DC143C]/50 transition-all duration-300">
+            {/* The Ultimate UI combo */}
+            <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-transparent" durationMultiplier={1.5} />
+            <GraphicDesignUI />
+            <VideoEditingUI />
+
+            <div className="relative z-10 flex flex-col max-w-5xl flex-grow items-center text-center mx-auto mt-8 md:mt-12">
+              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center border border-white/20 group-hover:border-white/80 group-hover:shadow-[0_0_80px_rgba(255,255,255,0.4)] transition-all duration-500 mb-8 backdrop-blur-xl">
+                <Sparkles className="w-12 h-12 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+              </div>
+              
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#DC143C]/30 bg-[#DC143C]/10 text-[#DC143C] text-xs font-bold tracking-[0.2em] uppercase mb-6 backdrop-blur-md">
+                The Ultimate Package
+              </div>
+
+              <h3 className="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/50 tracking-tighter mb-8 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                360° Digital Launch
+              </h3>
+              
+              <p className="text-white/60 leading-relaxed font-light text-xl md:text-3xl mb-12 max-w-4xl">
+                We merge <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">Code, Design, and Film</span> into a single, cohesive ecosystem. From absolute scratch to a fully-realized digital empire.
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-3 mb-16">
+                {["Complete Brand Identity", "Full-Stack Application", "Cinematic Launch Video", "Marketing Assets"].map((tag, i) => (
+                  <span key={i} className="px-6 py-3 text-sm font-bold text-white/90 bg-white/10 border border-white/20 rounded-full group-hover:border-white/60 group-hover:bg-white/20 transition-all duration-500 cursor-default backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            <div 
+              onClick={() => window.dispatchEvent(new CustomEvent('trigger-360-transition'))}
+              className="cursor-pointer relative z-10 mt-auto flex items-center justify-center text-lg font-bold text-black group-hover:text-black transition-all duration-300 uppercase tracking-widest bg-white w-full md:w-fit mx-auto px-16 py-6 rounded-full border border-white hover:scale-105 group-hover:shadow-[0_0_60px_rgba(255,255,255,0.8)]"
+            >
+              Start Your Empire
+              <ArrowRight className="w-6 h-6 ml-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+            </div>
+          </SpotlightCard>
+        </motion.div>
 
       </div>
     </section>
