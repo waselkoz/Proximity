@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion, useAnimate, stagger } from "framer-motion";
 import { useRouter } from "next/navigation";
-import CodeRain from "@/components/ui/CodeRain";
 
 export default function GlobalTransition() {
   const [isActive, setIsActive] = useState(false);
@@ -52,35 +51,34 @@ export default function GlobalTransition() {
           if (transitionType === "dev") {
             router.prefetch("/development");
             
-            // 1. Terminal window scales in (like opening a sleek app)
-            await animate("#dev-terminal-window", 
-              { scale: 1, opacity: 1, y: 0 }, 
-              { type: "spring", bounce: 0.4, duration: 0.8 }
+            // 1. Grid fades in and scales up slightly
+            await animate("#blueprint-grid", 
+              { opacity: 1, scale: 1 }, 
+              { duration: 0.5, ease: "easeOut" }
             );
             
-            // 2. Rapidly reveal log lines with a slight slide-in
-            animate(".dev-log", { opacity: 1, x: 0 }, { duration: 0.1, delay: stagger(0.1) });
+            // 2. Lines draw themselves in (staggered) & Cursors trace
+            animate(".blueprint-line-h", { scaleX: 1, opacity: 1 }, { duration: 0.6, delay: stagger(0.1) });
+            animate(".blueprint-cursor-h", { left: ["0%", "100%"], opacity: [0, 1, 1, 0] }, { duration: 0.6, delay: stagger(0.1) });
             
-            // Progressively fill the loading bar
-            await animate("#terminal-progress", { width: ["0%", "100%"] }, { duration: 0.6, ease: "easeOut", delay: 0.3 });
+            animate(".blueprint-line-v", { scaleY: 1, opacity: 1 }, { duration: 0.6, delay: stagger(0.1) });
+            await animate(".blueprint-cursor-v", { top: ["0%", "100%"], opacity: [0, 1, 1, 0] }, { duration: 0.6, delay: stagger(0.1) });
             
+            // 3. Nodes pulse and Data appears
+            animate(".blueprint-node", { scale: [0, 1.2, 1], opacity: 1 }, { duration: 0.4, delay: stagger(0.05) });
+            animate(".blueprint-data", { opacity: [0, 1, 0.5], x: 0 }, { duration: 0.4, delay: stagger(0.05) });
+            
+            // 3.5 Sidebar slides in
+            animate("#ide-sidebar", { x: "0%", opacity: 1 }, { type: "spring", bounce: 0, duration: 0.4 });
+            await animate(".ide-log", { opacity: 1, x: 0 }, { duration: 0.2, delay: stagger(0.1) });
+
             // Navigate in background
             router.push("/development");
             await new Promise(r => setTimeout(r, 200));
 
-            // 3. System Glitch / Overload Shake
-            await animate("#dev-terminal-window", { 
-              x: [0, -15, 15, -10, 10, -5, 5, 0],
-              y: [0, 10, -10, 5, -5, 2, -2, 0],
-              filter: ["hue-rotate(0deg) contrast(1)", "hue-rotate(90deg) contrast(2)", "hue-rotate(-90deg) contrast(2)", "hue-rotate(0deg) contrast(1)"]
-            }, { duration: 0.25 });
-
-            // 4. CRT Power Off effect
-            animate("#dev-terminal-window", { opacity: 0 }, { duration: 0.05 });
-            await animate("#crt-flash", { scaleY: 0.005, opacity: 1 }, { duration: 0.1 });
-            await animate("#crt-flash", { scaleX: 0, opacity: 0 }, { duration: 0.15 });
-            
-            await animate("#dev-terminal", { opacity: 0 }, { duration: 0.3 });
+            // 4. Grid flashes and expands out to reveal page
+            animate("#ide-sidebar", { opacity: 0, x: "20%" }, { duration: 0.2 });
+            await animate("#blueprint-container", { scale: 1.1, opacity: 0, filter: "brightness(2)" }, { duration: 0.4, ease: "easeIn" });
 
           } else if (transitionType === "design") {
             router.prefetch("/design");
@@ -161,67 +159,92 @@ export default function GlobalTransition() {
       {/* Dev Transition Layers */}
       {transitionType === "dev" && (
         <motion.div
-          id="dev-terminal"
-          className="absolute inset-0 z-[9999] flex items-center justify-center bg-[#020202] overflow-hidden"
+          id="blueprint-container"
+          className="absolute inset-0 z-[9999] flex items-center justify-center bg-[#050505] overflow-hidden"
         >
-          {/* Matrix Code Rain Backdrop */}
-          <CodeRain className="opacity-20" durationMultiplier={0.5} />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#000_100%)] z-10 pointer-events-none" />
-
+          {/* Blueprint Background Grid */}
           <motion.div 
-            id="dev-terminal-window"
-            className="w-11/12 h-[80vh] md:w-3/4 md:h-3/4 bg-[#030303] border border-white/10 rounded-xl flex flex-col font-mono overflow-hidden relative shadow-[0_0_80px_rgba(220,20,60,0.3)] z-20"
-            style={{ scale: 0.8, opacity: 0, y: 50 }}
-          >
-            {/* CRT Scanlines */}
-            <div className="absolute inset-0 pointer-events-none opacity-10 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.5)_51%)] bg-[length:100%_4px] z-10" />
-            <div className="absolute inset-0 pointer-events-none opacity-20 shadow-[inset_0_0_100px_rgba(0,0,0,1)] z-10" />
-
-            {/* Terminal Header */}
-            <div className="h-10 border-b border-white/10 flex items-center px-4 gap-2 bg-[#0A0A0A] relative z-20">
-              <div className="w-3 h-3 rounded-full bg-[#FF5F56] shadow-[0_0_5px_#FF5F56]" />
-              <div className="w-3 h-3 rounded-full bg-[#FFBD2E] shadow-[0_0_5px_#FFBD2E]" />
-              <div className="w-3 h-3 rounded-full bg-[#27C93F] shadow-[0_0_5px_#27C93F]" />
-              <span className="ml-4 text-white/30 text-[10px] md:text-xs font-bold tracking-widest uppercase">root@proximity-engine ~ /build</span>
-            </div>
-            
-            {/* Terminal Content */}
-            <div className="p-6 md:p-10 flex flex-col gap-3 relative z-20 font-medium text-sm md:text-base">
-              <motion.div className="dev-log text-white/50" style={{ opacity: 0, x: -10 }}>
-                <span className="text-[#DC143C]">{'❯'}</span> SYSTEM BOOT SEQUENCE INITIATED...
-              </motion.div>
-              <motion.div className="dev-log text-blue-400" style={{ opacity: 0, x: -10 }}>
-                [INFO] Allocating memory blocks 0x000F4... OK
-              </motion.div>
-              <motion.div className="dev-log text-yellow-400" style={{ opacity: 0, x: -10 }}>
-                [WARN] Deprecated API usage detected in core.ts (ignoring for build)
-              </motion.div>
-              <motion.div className="dev-log text-white/80" style={{ opacity: 0, x: -10 }}>
-                <span className="text-[#DC143C]">{'❯'}</span> COMPILING ARCHITECTURE 
-                <div className="inline-block ml-4 w-32 h-3 bg-white/10 relative overflow-hidden align-middle">
-                  <motion.div id="terminal-progress" className="absolute top-0 left-0 h-full bg-[#DC143C]" style={{ width: "0%" }} />
-                </div>
-                <span className="inline-block ml-2 text-[#DC143C]/60 text-xs">OK</span>
-              </motion.div>
-              <motion.div className="dev-log text-green-400 font-bold" style={{ opacity: 0, x: -10 }}>
-                [SUCCESS] Build completed in 0.42s.
-              </motion.div>
-              <motion.div className="dev-log text-white" style={{ opacity: 0, x: -10 }}>
-                <span className="text-[#DC143C]">{'❯'}</span> Executing deployment protocols<motion.span 
-                  animate={{ opacity: [1, 0] }} 
-                  transition={{ repeat: Infinity, duration: 0.6 }}
-                  className="inline-block w-3 h-5 bg-[#DC143C] align-middle ml-2 shadow-[0_0_8px_#DC143C]"
-                />
-              </motion.div>
-            </div>
-          </motion.div>
-          
-          {/* CRT Power-off flash layer */}
-          <motion.div 
-            id="crt-flash"
-            className="absolute inset-0 bg-white z-[60]"
-            style={{ scaleY: 0, opacity: 0 }}
+            id="blueprint-grid"
+            className="absolute inset-0 opacity-0 scale-95"
+            style={{ 
+              backgroundImage: `linear-gradient(rgba(220, 20, 60, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(220, 20, 60, 0.1) 1px, transparent 1px)`,
+              backgroundSize: '40px 40px'
+            }}
           />
+
+          {/* Glowing structural elements */}
+          <div className="relative w-full h-full max-w-5xl max-h-[80vh]">
+            {/* Horizontal Lines */}
+            {[20, 40, 60, 80].map((top, i) => (
+              <div key={`h-container-${i}`} className="absolute left-0 right-0 h-[1px]" style={{ top: `${top}%` }}>
+                <motion.div 
+                  className="blueprint-line-h absolute inset-0 bg-gradient-to-r from-transparent via-[#DC143C] to-transparent shadow-[0_0_10px_#DC143C] origin-left"
+                  style={{ scaleX: 0, opacity: 0 }}
+                />
+                <motion.div 
+                  className="blueprint-cursor-h absolute top-1/2 -translate-y-1/2 w-4 h-1 bg-white shadow-[0_0_10px_#fff,0_0_20px_#DC143C]"
+                  style={{ left: "0%", opacity: 0 }}
+                />
+              </div>
+            ))}
+            
+            {/* Vertical Lines */}
+            {[20, 40, 60, 80].map((left, i) => (
+              <div key={`v-container-${i}`} className="absolute top-0 bottom-0 w-[1px]" style={{ left: `${left}%` }}>
+                <motion.div 
+                  className="blueprint-line-v absolute inset-0 bg-gradient-to-b from-transparent via-[#DC143C] to-transparent shadow-[0_0_10px_#DC143C] origin-top"
+                  style={{ scaleY: 0, opacity: 0 }}
+                />
+                <motion.div 
+                  className="blueprint-cursor-v absolute left-1/2 -translate-x-1/2 w-1 h-4 bg-white shadow-[0_0_10px_#fff,0_0_20px_#DC143C]"
+                  style={{ top: "0%", opacity: 0 }}
+                />
+              </div>
+            ))}
+
+            {/* Nodes at intersections */}
+            {[20, 40, 60, 80].map((top) => (
+              [20, 40, 60, 80].map((left) => {
+                const hexCode = `0x${Math.floor(Math.random() * 4095).toString(16).toUpperCase().padStart(3, '0')}`;
+                return (
+                  <div key={`node-container-${top}-${left}`} className="absolute" style={{ top: `${top}%`, left: `${left}%` }}>
+                    <motion.div 
+                      className="blueprint-node absolute w-2 h-2 bg-white rounded-full shadow-[0_0_10px_#fff,0_0_20px_#DC143C] -translate-x-1/2 -translate-y-1/2"
+                      style={{ scale: 0, opacity: 0 }}
+                    />
+                    <motion.div
+                      className="blueprint-data absolute top-2 left-2 font-mono text-[8px] text-[#DC143C] tracking-widest whitespace-nowrap"
+                      style={{ opacity: 0, x: -5 }}
+                    >
+                      {hexCode} <span className="text-green-500">[OK]</span>
+                    </motion.div>
+                  </div>
+                );
+              })
+            ))}
+          </div>
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="absolute bottom-10 left-10 font-mono text-[#DC143C] text-sm uppercase tracking-widest"
+          >
+            [ BUILDING ARCHITECTURE ]
+          </motion.div>
+
+          {/* IDE Debugger Sidebar Overlay */}
+          <motion.div
+            id="ide-sidebar"
+            className="absolute top-0 right-0 bottom-0 w-64 bg-black/60 backdrop-blur-xl border-l border-white/10 p-6 font-mono text-xs flex flex-col gap-2 z-50"
+            style={{ x: "100%", opacity: 0 }}
+          >
+            <div className="text-white/50 mb-4 pb-2 border-b border-white/10">DEBUG CONSOLE</div>
+            <motion.div className="ide-log text-[#DC143C]" style={{ opacity: 0, x: 10 }}>{'>'} compiling core...</motion.div>
+            <motion.div className="ide-log text-white/70" style={{ opacity: 0, x: 10 }}>{'>'} resolving layouts...</motion.div>
+            <motion.div className="ide-log text-white/70" style={{ opacity: 0, x: 10 }}>{'>'} building chunks...</motion.div>
+            <motion.div className="ide-log text-green-500 mt-2" style={{ opacity: 0, x: 10 }}>{'>'} 200 OK</motion.div>
+          </motion.div>
         </motion.div>
       )}
 

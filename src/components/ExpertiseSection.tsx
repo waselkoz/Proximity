@@ -472,16 +472,37 @@ export default function ExpertiseSection() {
   const coreOpacity = useTransform(smoothProgress, [0, 0.5, 1], [0.3, 1, 0]);
   const coreRotate = useTransform(smoothProgress, [0, 1], [0, 180]);
 
-  // Uniform parallax speed so they drift together over the background without colliding
-  const card1Y = useTransform(smoothProgress, [0, 1], [200, -200]);
-  const card2Y = useTransform(smoothProgress, [0, 1], [200, -200]);
-  const card3Y = useTransform(smoothProgress, [0, 1], [200, -200]);
-  const card4Y = useTransform(smoothProgress, [0, 1], [200, -200]);
-  
   const bgTextY = useTransform(smoothProgress, [0, 1], [100, -300]);
 
+  // Cinematic Deep Dive Transition
+  const { scrollYProgress: transitionProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 100%", "start 0%"]
+  });
+
+  const sectionScale = useTransform(transitionProgress, [0, 1], [0.9, 1]);
+  const sectionY = useTransform(transitionProgress, [0, 1], [100, 0]);
+  const overlayOpacity = useTransform(transitionProgress, [0, 0.8], [1, 0]);
+  const sectionBorderRadius = useTransform(transitionProgress, [0, 1], ["4rem", "0rem"]);
+
+
+
   return (
-    <section ref={containerRef} className="relative w-full bg-[#000000] py-32 md:py-48 flex flex-col items-center overflow-hidden">
+    <motion.section 
+      ref={containerRef} 
+      style={{ 
+        scale: sectionScale, 
+        y: sectionY,
+        borderTopLeftRadius: sectionBorderRadius,
+        borderTopRightRadius: sectionBorderRadius,
+      }}
+      className="relative w-full bg-[#000000] py-32 md:py-48 flex flex-col items-center overflow-hidden z-20 shadow-[0_-30px_80px_rgba(0,0,0,0.1)]"
+    >
+      {/* Fog Reveal Overlay */}
+      <motion.div 
+        className="absolute inset-0 bg-white z-50 pointer-events-none"
+        style={{ opacity: overlayOpacity }}
+      />
       
       {/* CINEMATIC BARS */}
       <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-black via-black/80 to-transparent z-40 pointer-events-none" />
@@ -549,21 +570,17 @@ export default function ExpertiseSection() {
         </motion.p>
       </div>
 
-      {/* Cinematic Parallax Cards Section */}
-      <div className="relative w-full max-w-[1600px] mx-auto flex flex-col px-6 z-30 group/grid pb-48 pt-32 h-auto gap-24 md:gap-40">
+      {/* Asymmetrical Bento Grid Section */}
+      <div className="relative w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 z-30 pb-48 pt-12">
         
-        {/* The Motherboard Connection Spine */}
-        <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-[2px] bg-white/5 md:-translate-x-1/2 z-0 hidden md:block">
-          {/* Animated Energy Pulse */}
-          <motion.div 
-            className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-transparent via-[#DC143C] to-transparent shadow-[0_0_30px_rgba(220,20,60,1)] rounded-full opacity-50 group-hover/grid:opacity-100 transition-opacity duration-500"
-            animate={{ top: ['-30%', '130%'] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-          />
-        </div>
-        
-        {/* Card 1: Development - Massive on the Left */}
-        <motion.div style={{ y: card1Y }} className="w-full md:w-[80%] self-start relative z-10">
+        {/* Card 1: Development - Massive on Top */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }} 
+          transition={{ duration: 0.8 }} 
+          className="lg:col-span-2 relative z-10 w-full"
+        >
           <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[150px] rounded-full z-0 pointer-events-none" />
           <SpotlightCard delay={0.1} className="relative z-10 min-h-[550px]">
             <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60" durationMultiplier={1.5} />
@@ -597,8 +614,14 @@ export default function ExpertiseSection() {
           </SpotlightCard>
         </motion.div>
 
-        {/* Card 2: Graphic Design - Overlapping on the Right */}
-        <motion.div style={{ y: card2Y }} className="w-full md:w-[80%] self-end relative z-20">
+        {/* Card 2: Graphic Design */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }} 
+          transition={{ duration: 0.8, delay: 0.1 }} 
+          className="relative z-20 w-full flex"
+        >
           <div className="absolute -inset-32 bg-white/5 blur-[150px] rounded-full z-0 pointer-events-none" />
           <SpotlightCard delay={0.3} className="relative z-10 min-h-[550px]">
             <GraphicDesignUI />
@@ -632,8 +655,14 @@ export default function ExpertiseSection() {
           </SpotlightCard>
         </motion.div>
 
-        {/* Card 3: Video Editing - Centered, Massive Finale */}
-        <motion.div style={{ y: card3Y }} className="w-full md:w-[80%] self-start relative z-30">
+        {/* Card 3: Video Editing */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }} 
+          transition={{ duration: 0.8, delay: 0.2 }} 
+          className="relative z-30 w-full flex"
+        >
           <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[150px] rounded-full z-0 pointer-events-none" />
           <SpotlightCard delay={0.5} className="relative z-10 min-h-[600px]">
             <VideoEditingUI />
@@ -667,7 +696,13 @@ export default function ExpertiseSection() {
         </motion.div>
 
         {/* Card 4: 360° Digital Launch - The Ultimate Boss Card */}
-        <motion.div style={{ y: card4Y }} className="w-full self-center relative z-40 mb-32 md:mb-0">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }} 
+          transition={{ duration: 0.8, delay: 0.3 }} 
+          className="lg:col-span-2 relative z-40 w-full"
+        >
           <div className="absolute -inset-32 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)] blur-[150px] rounded-full z-0 pointer-events-none" />
           <SpotlightCard delay={0.7} className="relative z-10 min-h-[600px] ring-2 ring-white/10 group-hover:ring-[#DC143C]/50 transition-all duration-300">
             {/* The Ultimate UI combo */}
@@ -712,6 +747,6 @@ export default function ExpertiseSection() {
         </motion.div>
 
       </div>
-    </section>
+    </motion.section>
   );
 }
