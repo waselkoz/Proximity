@@ -1,121 +1,13 @@
 "use client";
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, MotionValue } from 'framer-motion';
 import { Code2, Palette, Film, Sparkles, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CodeRain from '@/components/ui/CodeRain';
+import SpotlightCard from '@/components/ui/SpotlightCard';
+import CinematicParticles from '@/components/ui/CinematicParticles';
 
-// --- Ultra Premium 3D Tilt Card with Spotlight ---
-function SpotlightCard({ 
-  children, 
-  delay,
-  className,
-}: { 
-  children: React.ReactNode, 
-  delay: number,
-  className?: string,
-}) {
-  let mouseX = useMotionValue(0);
-  let mouseY = useMotionValue(0);
-
-  // For 3D Tilt
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const springConfig = { damping: 20, stiffness: 100, mass: 0.5 };
-  const smoothX = useSpring(x, springConfig);
-  const smoothY = useSpring(y, springConfig);
-
-  const rotateX = useTransform(smoothY, [-250, 250], [10, -10]);
-  const rotateY = useTransform(smoothX, [-250, 250], [-10, 10]);
-
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    let rect = e.currentTarget.getBoundingClientRect();
-    
-    // Spotlight
-    mouseX.set(e.clientX - rect.left);
-    mouseY.set(e.clientY - rect.top);
-
-    // 3D Tilt
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    x.set(e.clientX - rect.left - centerX);
-    y.set(e.clientY - rect.top - centerY);
-  }
-
-  function handleMouseLeave() {
-    x.set(0);
-    y.set(0);
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "100px" }}
-      transition={{ duration: 0.4, delay: delay * 0.5, ease: [0.22, 1, 0.36, 1] }}
-      style={{ perspective: 2000 }}
-      className={cn("w-full h-full cursor-pointer group", className)}
-    >
-      <motion.div
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
-        }}
-        className={cn(
-          "relative w-full h-full rounded-[2.5rem] bg-[#0A0A0A] border border-white/10 overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.8)] transition-all duration-300 ease-out group/card group-hover/grid:opacity-50 hover:!opacity-100"
-        )}
-      >
-        {/* Dark frosted glass background */}
-        <div className="absolute inset-0 bg-white/[0.02] backdrop-blur-3xl" style={{ transform: "translateZ(0)" }} />
-        
-        {/* Outer Crimson Glow Spotlight */}
-        <motion.div
-          className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition duration-300 group-hover:opacity-100 mix-blend-screen"
-          style={{
-            transform: "translateZ(0)",
-            background: useMotionTemplate`
-              radial-gradient(
-                600px circle at ${mouseX}px ${mouseY}px,
-                rgba(220, 20, 60, 0.15),
-                transparent 80%
-              )
-            `,
-          }}
-        />
-        
-        {/* Inner White Spotlight for crisp edges */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-[2.5rem] opacity-0 transition duration-150 group-hover:opacity-100"
-          style={{
-            transform: "translateZ(0)",
-            background: useMotionTemplate`
-              radial-gradient(
-                300px circle at ${mouseX}px ${mouseY}px,
-                rgba(255, 255, 255, 0.05),
-                transparent 80%
-              )
-            `,
-          }}
-        />
-        
-        {/* Main Card Body (Popped out in 3D!) */}
-        <div 
-          className="relative w-full h-full p-8 md:p-10 flex flex-col pointer-events-none"
-          style={{ transform: "translateZ(60px)", transformStyle: "preserve-3d" }}
-        >
-          <div className="pointer-events-auto h-full flex flex-col">
-            {children}
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 // Local CodeRain removed, using global CodeRain from @/components/ui/CodeRain
 
@@ -297,10 +189,10 @@ function TimelineNode({
   totalSteps, 
   smoothProgress 
 }: { 
-  step: any; 
+  step: { id?: string | number; title: string; description: string; image?: string }; 
   index: number; 
   totalSteps: number; 
-  smoothProgress: any; 
+  smoothProgress: MotionValue<number>; 
 }) {
   // Map index from 0..1 to 0.1..0.9 to prevent steps from spilling out of the top/bottom of the container
   const normalizedIndex = totalSteps > 1 ? index / (totalSteps - 1) : 0.5;
@@ -336,9 +228,7 @@ function TimelineNode({
             : "md:col-start-2 md:pl-16 md:text-left"
         )}
       >
-        <div className="text-[#DC143C] font-bold text-xs tracking-widest mb-1 drop-shadow-[0_0_5px_rgba(220,20,60,0.5)]">
-            STEP {step.id}
-          </div>
+
           <h4 className="text-xl md:text-2xl font-semibold text-white mb-2 leading-tight drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
             {step.title}
           </h4>
@@ -355,8 +245,8 @@ function TimelineNode({
             scale: imgScale 
           }}
           className={cn(
-            "hidden md:block w-full max-h-[300px] rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(220,20,60,0.15)] border border-white/10 relative z-10 md:row-start-1",
-            !isEven ? "col-start-2 ml-16" : "col-start-1 mr-16"
+            "w-[calc(100%-4rem)] ml-16 md:w-full md:ml-0 max-h-[200px] md:max-h-[300px] rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(220,20,60,0.15)] border border-white/10 relative z-10 md:row-start-1 mt-6 md:mt-0",
+            !isEven ? "md:col-start-2 md:ml-16" : "md:col-start-1 md:mr-16"
           )}
         >
           <img src={step.image} alt={step.title || "Timeline Image"} className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700 ease-out" />
@@ -416,49 +306,10 @@ function ScrollTimeline() {
   );
 }
 
-function CinematicParticles({ scrollYProgress }: { scrollYProgress: any }) {
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -600]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -1000]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -400]);
 
-  const dustParticles = Array.from({ length: 30 }).map((_, i) => ({
-    top: `${Math.random() * 100}%`,
-    left: `${Math.random() * 100}%`,
-    delay: Math.random() * 5,
-    duration: 3 + Math.random() * 5,
-  }));
+export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
+  const t = (en: string, fr: string) => lang === "fr" ? fr : en;
 
-  return (
-    <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
-      {/* Huge Out of Focus Orbs */}
-      <motion.div style={{ y: y1 }} className="absolute top-[20%] left-[5%] w-[400px] h-[400px] bg-[#DC143C]/20 rounded-full blur-[120px]" />
-      <motion.div style={{ y: y2 }} className="absolute top-[60%] right-[5%] w-[500px] h-[500px] bg-white/5 rounded-full blur-[150px]" />
-      <motion.div style={{ y: y3 }} className="absolute bottom-[10%] left-[20%] w-[300px] h-[300px] bg-[#DC143C]/10 rounded-full blur-[100px]" />
-      
-      {/* Tiny Dust Particles */}
-      {dustParticles.map((p, i) => (
-        <motion.div 
-          key={i}
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0, 0.8, 0],
-            scale: [0.8, 1.2, 0.8]
-          }}
-          transition={{
-            duration: p.duration,
-            repeat: Infinity,
-            delay: p.delay,
-            ease: "easeInOut"
-          }}
-          className="absolute w-1 h-1 bg-white rounded-full blur-[1px] shadow-[0_0_10px_white]"
-          style={{ top: p.top, left: p.left }}
-        />
-      ))}
-    </div>
-  );
-}
-
-export default function ExpertiseSection() {
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -489,6 +340,7 @@ export default function ExpertiseSection() {
 
   return (
     <motion.section 
+      id="services"
       ref={containerRef} 
       style={{ 
         scale: sectionScale, 
@@ -496,7 +348,7 @@ export default function ExpertiseSection() {
         borderTopLeftRadius: sectionBorderRadius,
         borderTopRightRadius: sectionBorderRadius,
       }}
-      className="relative w-full bg-[#000000] py-32 md:py-48 flex flex-col items-center overflow-hidden z-20 shadow-[0_-30px_80px_rgba(0,0,0,0.1)]"
+      className="relative w-full bg-[#000000] py-32 md:py-48 flex flex-col items-center overflow-hidden z-20 shadow-[0_-30px_80px_rgba(0,0,0,0.1)] scroll-mt-16"
     >
       {/* Fog Reveal Overlay */}
       <motion.div 
@@ -525,7 +377,7 @@ export default function ExpertiseSection() {
         className="absolute top-[30%] left-0 w-full flex justify-center pointer-events-none z-0 opacity-10"
       >
         <h1 className="text-[20vw] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-black tracking-tighter leading-none select-none">
-          ORIGIN
+          {t("ORIGIN", "ORIGINE")}
         </h1>
       </motion.div>
       
@@ -537,19 +389,8 @@ export default function ExpertiseSection() {
 
       {/* Header with MorphText */}
       <div className="relative z-30 text-center px-6 mb-20 md:mb-32 flex flex-col items-center w-full max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 bg-black/60 text-white/90 text-sm font-medium tracking-[0.3em] uppercase mb-10 backdrop-blur-2xl shadow-[0_0_30px_rgba(220,20,60,0.3)]"
-        >
-          <Sparkles className="w-5 h-5 text-[#DC143C] drop-shadow-[0_0_8px_rgba(220,20,60,0.8)]" />
-          <span>The Origin</span>
-        </motion.div>
-
-        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/30 mb-6 drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]">
-          Where Everything Begins.
+        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-normal md:leading-normal text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/30 mb-6 drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+          {t("Where Everything Begins.", "Où tout commence.")}
         </h2>
       </div>
 
@@ -557,7 +398,7 @@ export default function ExpertiseSection() {
       <ScrollTimeline />
 
       {/* Transition Text */}
-      <div className="relative z-30 text-center px-6 mb-32 flex flex-col items-center w-full max-w-4xl mx-auto">
+      <div id="about" className="relative z-30 text-center px-6 mb-32 flex flex-col items-center w-full max-w-4xl mx-auto scroll-mt-24">
         <motion.p
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -565,186 +406,165 @@ export default function ExpertiseSection() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="text-3xl md:text-5xl lg:text-6xl font-light text-white/80 leading-tight tracking-tight"
         >
-          Here at <span className="font-bold text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">Proximity</span>, we engineer <br/>
-          <span className="text-[#DC143C] font-semibold italic text-5xl md:text-7xl lg:text-8xl mt-4 block">the extraordinary.</span>
+          {lang === "fr" ? (
+            <>Chez <span className="font-bold text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">Proximity</span>, nous concevons <br/>
+            <span className="text-[#DC143C] font-semibold italic text-5xl md:text-7xl lg:text-8xl mt-4 block">l'extraordinaire.</span></>
+          ) : (
+            <>Here at <span className="font-bold text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">Proximity</span>, we engineer <br/>
+            <span className="text-[#DC143C] font-semibold italic text-5xl md:text-7xl lg:text-8xl mt-4 block">the extraordinary.</span></>
+          )}
         </motion.p>
       </div>
 
-      {/* Asymmetrical Bento Grid Section */}
-      <div className="relative w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 z-30 pb-48 pt-12">
+      {/* Timeline Style Cards Section */}
+      <div className="relative w-full flex flex-col gap-8 md:gap-10 z-30 pb-48 pt-12 overflow-hidden">
         
+        {/* The Platform (Vertical Line) */}
+        <div className="absolute left-[15px] md:left-[12vw] top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#DC143C] to-transparent shadow-[0_0_15px_rgba(220,20,60,0.8)] z-0" />
+
         {/* Card 1: Development - Massive on Top */}
         <motion.div 
-          initial={{ opacity: 0, y: 50 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true, margin: "-100px" }} 
-          transition={{ duration: 0.8 }} 
-          className="lg:col-span-2 relative z-10 w-full"
+          initial={{ opacity: 0, x: 200 }} 
+          whileInView={{ opacity: 1, x: 0 }} 
+          viewport={{ once: false, margin: "-20%" }} 
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }} 
+          className="relative z-10 w-[94%] md:w-[70%] pl-[15px] md:pl-[12vw]"
         >
-          <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[150px] rounded-full z-0 pointer-events-none" />
-          <SpotlightCard delay={0.1} className="relative z-10 min-h-[550px]">
-            <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60" durationMultiplier={1.5} />
+          <div className="relative w-full h-full group/wrapper">
+            <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[150px] rounded-full z-0 pointer-events-none" />
+            <SpotlightCard delay={0.1} className="relative z-10 min-h-[350px] md:min-h-[400px]">
+              <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60" durationMultiplier={1.5} />
 
-            <div className="relative z-10 flex flex-col mb-8">
-              <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_40px_rgba(220,20,60,0.3)] transition-all duration-500 mb-6">
-                <Code2 className="w-10 h-10 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+              <div className="relative z-10 flex flex-col mb-4 md:mb-6">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_40px_rgba(220,20,60,0.3)] transition-all duration-500 mb-4">
+                  <Code2 className="w-6 h-6 md:w-8 md:h-8 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+                </div>
+                <h3 className="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight">{t("Development", "Développement")}</h3>
               </div>
-              <h3 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight">Development</h3>
-            </div>
-            
-            <p className="relative z-10 text-white/60 leading-relaxed font-light text-xl md:text-2xl mb-8 max-w-2xl">
-              We architect <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">blazing-fast</span>, scalable, and highly accessible web applications. From custom dashboards to high-converting stores, we build with meticulous attention to modern frameworks.
-            </p>
+              
+              <p className="relative z-10 text-white/60 leading-relaxed font-light text-base md:text-xl mb-6 max-w-2xl">
+                {lang === "fr" ? (
+                  <>Nous concevons des applications web <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">ultra-rapides</span>, évolutives et hautement accessibles. Des tableaux de bord sur mesure aux boutiques à fort taux de conversion, nous développons avec une attention méticuleuse.</>
+                ) : (
+                  <>We architect <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">blazing-fast</span>, scalable, and highly accessible web applications. From custom dashboards to high-converting stores, we build with meticulous attention to modern frameworks.</>
+                )}
+              </p>
 
-            <div className="flex flex-wrap gap-3 mb-12 relative z-10">
-              {["Web Apps", "E-Commerce", "Landing Pages", "Custom APIs"].map((tag, i) => (
-                <span key={i} className="px-4 py-2 text-sm font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            
-            <div 
-              onClick={() => window.dispatchEvent(new CustomEvent('trigger-dev-transition'))}
-              className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-base font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-10 py-5 md:py-4 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_30px_rgba(220,20,60,0.6)] backdrop-blur-md"
-            >
-              Discover More
-              <ArrowRight className="w-5 h-5 ml-3 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-            </div>
-          </SpotlightCard>
+              <div className="flex flex-wrap gap-2 mb-6 md:mb-8 relative z-10">
+                {(lang === "fr" ? ["Apps Web", "E-Commerce", "Landing Pages", "APIs Sur Mesure"] : ["Web Apps", "E-Commerce", "Landing Pages", "Custom APIs"]).map((tag, i) => (
+                  <span key={i} className="px-3 py-1.5 text-[10px] md:text-xs font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              
+              <div 
+                onClick={() => window.dispatchEvent(new CustomEvent('trigger-dev-transition'))}
+                className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-xs md:text-sm font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-6 md:px-8 py-3 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_30px_rgba(220,20,60,0.6)] backdrop-blur-md"
+              >
+                {t("Discover More", "En Savoir Plus")}
+                <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+              </div>
+            </SpotlightCard>
+          </div>
         </motion.div>
 
         {/* Card 2: Graphic Design */}
         <motion.div 
-          initial={{ opacity: 0, y: 50 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true, margin: "-100px" }} 
-          transition={{ duration: 0.8, delay: 0.1 }} 
-          className="relative z-20 w-full flex"
+          initial={{ opacity: 0, x: 200 }} 
+          whileInView={{ opacity: 1, x: 0 }} 
+          viewport={{ once: false, margin: "-20%" }} 
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }} 
+          className="relative z-20 w-[96%] md:w-[80%] pl-[15px] md:pl-[12vw]"
         >
-          <div className="absolute -inset-32 bg-white/5 blur-[150px] rounded-full z-0 pointer-events-none" />
-          <SpotlightCard delay={0.3} className="relative z-10 min-h-[550px]">
-            <GraphicDesignUI />
+          <div className="relative w-full h-full group/wrapper">
+            <div className="absolute -inset-32 bg-white/5 blur-[150px] rounded-full z-0 pointer-events-none" />
+            <SpotlightCard delay={0.3} className="relative z-10 min-h-[350px] md:min-h-[400px]">
+              <GraphicDesignUI />
 
-            <div className="relative z-10 flex flex-col mb-8">
-              <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_40px_rgba(220,20,60,0.3)] transition-all duration-500 mb-6">
-                <Palette className="w-10 h-10 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+              <div className="relative z-10 flex flex-col mb-4 md:mb-6">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_40px_rgba(220,20,60,0.3)] transition-all duration-500 mb-4">
+                  <Palette className="w-6 h-6 md:w-8 h-8 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+                </div>
+                <h3 className="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight">{t("Design", "Design")}</h3>
               </div>
-              <h3 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight">Design</h3>
-            </div>
-            
-            <p className="relative z-10 text-white/60 leading-relaxed font-light text-xl md:text-2xl mb-8 flex-grow">
-              Crafting <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">distinctive visual identities</span> and breathtaking aesthetics that resonate with your core audience.
-            </p>
-            
-            <div className="flex flex-wrap gap-3 mb-12 relative z-10">
-              {["UI/UX", "Branding", "Social Media", "Logos"].map((tag, i) => (
-                <span key={i} className="px-4 py-2 text-sm font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
-                  {tag}
-                </span>
-              ))}
-            </div>
+              
+              <p className="relative z-10 text-white/60 leading-relaxed font-light text-base md:text-xl mb-6 flex-grow">
+                {lang === "fr" ? (
+                  <>Création <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">d'identités visuelles distinctives</span> et d'esthétiques époustouflantes qui résonnent avec votre public cible.</>
+                ) : (
+                  <>Crafting <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">distinctive visual identities</span> and breathtaking aesthetics that resonate with your core audience.</>
+                )}
+              </p>
+              
+              <div className="flex flex-wrap gap-2 mb-6 md:mb-8 relative z-10">
+                {(lang === "fr" ? ["UI/UX", "Branding", "Réseaux Sociaux", "Logos"] : ["UI/UX", "Branding", "Social Media", "Logos"]).map((tag, i) => (
+                  <span key={i} className="px-3 py-1.5 text-[10px] md:text-xs font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
+                    {tag}
+                  </span>
+                ))}
+              </div>
 
-            <div 
-              onClick={() => window.dispatchEvent(new CustomEvent('trigger-design-transition'))}
-              className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-base font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-10 py-5 md:py-4 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_30px_rgba(220,20,60,0.6)] backdrop-blur-md"
-            >
-              Discover More
-              <ArrowRight className="w-5 h-5 ml-3 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-            </div>
-          </SpotlightCard>
+              <div 
+                onClick={() => window.dispatchEvent(new CustomEvent('trigger-design-transition'))}
+                className="cursor-pointer relative z-10 mt-auto flex items-center justify-center md:justify-start text-xs md:text-sm font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit px-6 md:px-8 py-3 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_30px_rgba(220,20,60,0.6)] backdrop-blur-md"
+              >
+                {t("Discover More", "En Savoir Plus")}
+                <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+              </div>
+            </SpotlightCard>
+          </div>
         </motion.div>
 
         {/* Card 3: Video Editing */}
         <motion.div 
-          initial={{ opacity: 0, y: 50 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true, margin: "-100px" }} 
-          transition={{ duration: 0.8, delay: 0.2 }} 
-          className="relative z-30 w-full flex"
+          initial={{ opacity: 0, x: 200 }} 
+          whileInView={{ opacity: 1, x: 0 }} 
+          viewport={{ once: false, margin: "-20%" }} 
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }} 
+          className="relative z-30 w-[98%] md:w-[90%] pl-[15px] md:pl-[12vw]"
         >
-          <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[150px] rounded-full z-0 pointer-events-none" />
-          <SpotlightCard delay={0.5} className="relative z-10 min-h-[600px]">
-            <VideoEditingUI />
+          <div className="relative w-full h-full group/wrapper">
+            <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[150px] rounded-full z-0 pointer-events-none" />
+            <SpotlightCard delay={0.5} className="relative z-10 min-h-[400px] md:min-h-[450px]">
+              <VideoEditingUI />
 
-            <div className="relative z-10 flex flex-col max-w-4xl flex-grow items-center text-center">
-              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_50px_rgba(220,20,60,0.3)] transition-all duration-500 mb-8 mt-4">
-                <Film className="w-12 h-12 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+              <div className="relative z-10 flex flex-col max-w-4xl flex-grow items-center text-center">
+                <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_50px_rgba(220,20,60,0.3)] transition-all duration-500 mb-4 md:mb-6 mt-2 md:mt-4">
+                  <Film className="w-7 h-7 md:w-10 md:h-10 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
+                </div>
+                <h3 className="text-3xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight mb-4">{t("Video Editing", "Montage Vidéo")}</h3>
+                <p className="text-white/60 leading-relaxed font-light text-base md:text-2xl mb-6 md:mb-8 max-w-3xl">
+                  {lang === "fr" ? (
+                    <>Racontez une histoire <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">cinématographique</span> avec des coupes dynamiques, des transitions fluides et un étalonnage professionnel pour engager vos spectateurs émotionnellement.</>
+                  ) : (
+                    <>Delivering <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">cinematic storytelling</span> with dynamic cuts, seamless transitions, and professional color grading to engage viewers emotionally.</>
+                  )}
+                </p>
+                
+                <div className="flex flex-wrap justify-center gap-2 mb-6 md:mb-8">
+                  {(lang === "fr" ? ["Promos", "Reels / TikToks", "Étalonnage", "VFX"] : ["Promos", "Reels / TikToks", "Color Grading", "VFX"]).map((tag, i) => (
+                    <span key={i} className="px-4 py-1.5 text-[10px] md:text-xs font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <h3 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#DC143C]/80 tracking-tight mb-6">Video Editing</h3>
-              <p className="text-white/60 leading-relaxed font-light text-xl md:text-3xl mb-10 max-w-3xl">
-                Delivering <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">cinematic storytelling</span> with dynamic cuts, seamless transitions, and professional color grading to engage viewers emotionally.
-              </p>
               
-              <div className="flex flex-wrap justify-center gap-3 mb-12">
-                {["Promos", "Reels / TikToks", "Color Grading", "VFX"].map((tag, i) => (
-                  <span key={i} className="px-5 py-2 text-sm font-semibold text-white/70 bg-white/5 border border-white/10 rounded-full group-hover:border-[#DC143C]/40 group-hover:text-[#DC143C] group-hover:bg-[#DC143C]/10 transition-all duration-500 cursor-default">
-                    {tag}
-                  </span>
-                ))}
+              <div 
+                onClick={() => window.dispatchEvent(new CustomEvent('trigger-video-transition'))}
+                className="cursor-pointer relative z-10 mt-auto flex items-center justify-center text-xs md:text-sm font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit mx-auto px-8 md:px-10 py-3 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_40px_rgba(220,20,60,0.6)] backdrop-blur-md"
+              >
+                {t("Discover More", "En Savoir Plus")}
+                <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
               </div>
-            </div>
-            
-            <div 
-              onClick={() => window.dispatchEvent(new CustomEvent('trigger-video-transition'))}
-              className="cursor-pointer relative z-10 mt-auto flex items-center justify-center text-base font-bold text-white group-hover:text-white transition-colors duration-300 uppercase tracking-widest bg-[#DC143C]/10 w-full md:w-fit mx-auto px-12 py-5 rounded-full border border-[#DC143C]/30 group-hover:border-[#DC143C] group-hover:bg-[#DC143C] group-hover:shadow-[0_0_40px_rgba(220,20,60,0.6)] backdrop-blur-md"
-            >
-              Discover More
-              <ArrowRight className="w-5 h-5 ml-3 opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-            </div>
-          </SpotlightCard>
+            </SpotlightCard>
+          </div>
         </motion.div>
 
-        {/* Card 4: 360° Digital Launch - The Ultimate Boss Card */}
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true, margin: "-100px" }} 
-          transition={{ duration: 0.8, delay: 0.3 }} 
-          className="lg:col-span-2 relative z-40 w-full"
-        >
-          <div className="absolute -inset-32 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)] blur-[150px] rounded-full z-0 pointer-events-none" />
-          <SpotlightCard delay={0.7} className="relative z-10 min-h-[600px] ring-2 ring-white/10 group-hover:ring-[#DC143C]/50 transition-all duration-300">
-            {/* The Ultimate UI combo */}
-            <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-transparent" durationMultiplier={1.5} />
-            <GraphicDesignUI />
-            <VideoEditingUI />
 
-            <div className="relative z-10 flex flex-col max-w-5xl flex-grow items-center text-center mx-auto mt-8 md:mt-12">
-              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center border border-white/20 group-hover:border-white/80 group-hover:shadow-[0_0_80px_rgba(255,255,255,0.4)] transition-all duration-500 mb-8 backdrop-blur-xl">
-                <Sparkles className="w-12 h-12 text-white group-hover:text-[#DC143C] transition-colors duration-500" />
-              </div>
-              
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#DC143C]/30 bg-[#DC143C]/10 text-[#DC143C] text-xs font-bold tracking-[0.2em] uppercase mb-6 backdrop-blur-md">
-                The Ultimate Package
-              </div>
 
-              <h3 className="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/50 tracking-tighter mb-8 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-                360° Digital Launch
-              </h3>
-              
-              <p className="text-white/60 leading-relaxed font-light text-xl md:text-3xl mb-12 max-w-4xl">
-                We merge <span className="font-semibold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">Code, Design, and Film</span> into a single, cohesive ecosystem. From absolute scratch to a fully-realized digital empire.
-              </p>
-              
-              <div className="flex flex-wrap justify-center gap-3 mb-16">
-                {["Complete Brand Identity", "Full-Stack Application", "Cinematic Launch Video", "Marketing Assets"].map((tag, i) => (
-                  <span key={i} className="px-6 py-3 text-sm font-bold text-white/90 bg-white/10 border border-white/20 rounded-full group-hover:border-white/60 group-hover:bg-white/20 transition-all duration-500 cursor-default backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-            
-            <div 
-              onClick={() => window.dispatchEvent(new CustomEvent('trigger-360-transition'))}
-              className="cursor-pointer relative z-10 mt-auto flex items-center justify-center text-lg font-bold text-black group-hover:text-black transition-all duration-300 uppercase tracking-widest bg-white w-full md:w-fit mx-auto px-16 py-6 rounded-full border border-white hover:scale-105 group-hover:shadow-[0_0_60px_rgba(255,255,255,0.8)]"
-            >
-              Start Your Empire
-              <ArrowRight className="w-6 h-6 ml-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-            </div>
-          </SpotlightCard>
-        </motion.div>
+
 
       </div>
     </motion.section>

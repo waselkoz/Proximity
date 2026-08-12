@@ -1,7 +1,7 @@
 import { NotchNavbar } from "@/components/ui/notch-navbar";
 
-export default function Navbar() {
+export default function Navbar({ lang = "en" }: { lang?: string }) {
   return (
-    <NotchNavbar />
+    <NotchNavbar lang={lang} />
   );
 }

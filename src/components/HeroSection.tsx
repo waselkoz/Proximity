@@ -1,9 +1,15 @@
+"use client";
+
 import React from 'react';
 import Image from 'next/image';
 import MorphText from '@/components/ui/morph-text';
-import { LightLines } from '@/components/ui/light-lines';
+import dynamic from 'next/dynamic';
 
-export default function HeroSection() {
+const LightLines = dynamic(() => import('@/components/ui/light-lines').then(m => m.LightLines), { ssr: false });
+
+export default function HeroSection({ lang = "en" }: { lang?: string }) {
+  const t = (en: string, fr: string) => lang === "fr" ? fr : en;
+
   return (
     <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white">
       <LightLines
@@ -30,8 +36,12 @@ export default function HeroSection() {
           {/* Morphing Text Hero */}
           <div className="w-full max-w-4xl mx-auto">
             <MorphText 
-              words={["PROXIMITY", "INNOVATION", "EXCELLENCE"]} 
-              subtext="Driving the future of digital experiences"
+              words={
+                lang === "fr" 
+                  ? ["PROXIMITÉ", "INNOVATION", "EXCELLENCE"] 
+                  : ["PROXIMITY", "INNOVATION", "EXCELLENCE"]
+              } 
+              subtext={t("Driving the future of digital experiences", "Conduire l'avenir des expériences numériques")}
               fontSize="clamp(2.5rem, 8vw, 6rem)"
             />
           </div>
