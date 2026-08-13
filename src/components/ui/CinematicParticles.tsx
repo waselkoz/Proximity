@@ -12,8 +12,11 @@ export default function CinematicParticles({ scrollYProgress }: { scrollYProgres
   const [dustParticles, setDustParticles] = useState<any[]>([]);
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 5 : 30;
+    
     setDustParticles(
-      Array.from({ length: 30 }).map(() => ({
+      Array.from({ length: particleCount }).map(() => ({
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
         delay: Math.random() * 5,

@@ -36,7 +36,7 @@ export default function TechMarquee() {
       <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-[#030303] to-transparent z-10 pointer-events-none" />
       
       <motion.div
-        className="flex items-center gap-16 md:gap-24 w-max"
+        className="flex items-center gap-16 md:gap-24 w-max transform-gpu"
         animate={{ x: [0, -1000] }} // We'll adjust distance to ensure it loops smoothly
         transition={{
           duration: 20,
@@ -46,12 +46,14 @@ export default function TechMarquee() {
         style={{
           // Use CSS calc to ensure smooth loop (width of one set of icons + gap)
           translateX: "0%",
+          willChange: "transform",
         }}
       >
         <motion.div
           animate={{ x: "-33.33%" }}
           transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
-          className="flex items-center gap-16 md:gap-24"
+          className="flex items-center gap-16 md:gap-24 transform-gpu"
+          style={{ willChange: "transform" }}
         >
           {duplicatedIcons.map((tech, index) => (
             <div 

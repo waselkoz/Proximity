@@ -11,7 +11,7 @@ const CODE_FRAGMENTS = [
 
 export default function CodeRain({ className = "", durationMultiplier = 1 }: { className?: string, durationMultiplier?: number }) {
   return (
-    <div className={`absolute inset-0 overflow-hidden pointer-events-none z-0 ${className}`}>
+    <div className={`hidden md:block absolute inset-0 overflow-hidden pointer-events-none z-0 ${className}`}>
       {CODE_FRAGMENTS.map((text, i) => (
         <motion.div
           key={i}

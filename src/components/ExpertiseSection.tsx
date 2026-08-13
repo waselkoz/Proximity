@@ -249,13 +249,13 @@ function TimelineNode({
             "w-[calc(100%-4rem)] ml-16 md:w-full md:ml-0 max-h-[200px] md:max-h-[300px] rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(220,20,60,0.15)] border border-white/10 relative z-10 md:row-start-1 mt-6 md:mt-0",
             !isEven ? "md:col-start-2 md:ml-16" : "md:col-start-1 md:mr-16"
           )}
-        >
           <Image 
             src={step.image} 
             alt={step.title || "Timeline Image"} 
-            fill 
+            width={800}
+            height={600}
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover object-top hover:scale-105 transition-transform duration-700 ease-out" 
+            className="w-full h-auto object-cover object-top hover:scale-105 transition-transform duration-700 ease-out" 
           />
         </motion.div>
       )}
@@ -433,7 +433,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
         <motion.div 
           initial={{ opacity: 0, x: 200 }} 
           whileInView={{ opacity: 1, x: 0 }} 
-          viewport={{ once: false, margin: "-20%" }} 
+          viewport={{ once: true, margin: "-20%" }} 
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }} 
           className="relative z-10 w-[94%] md:w-[70%] pl-[15px] md:pl-[12vw]"
         >
@@ -480,7 +480,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
         <motion.div 
           initial={{ opacity: 0, x: 200 }} 
           whileInView={{ opacity: 1, x: 0 }} 
-          viewport={{ once: false, margin: "-20%" }} 
+          viewport={{ once: true, margin: "-20%" }} 
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }} 
           className="relative z-20 w-[96%] md:w-[80%] pl-[15px] md:pl-[12vw]"
         >
@@ -527,7 +527,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
         <motion.div 
           initial={{ opacity: 0, x: 200 }} 
           whileInView={{ opacity: 1, x: 0 }} 
-          viewport={{ once: false, margin: "-20%" }} 
+          viewport={{ once: true, margin: "-20%" }} 
           transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }} 
           className="relative z-30 w-[98%] md:w-[90%] pl-[15px] md:pl-[12vw]"
         >
