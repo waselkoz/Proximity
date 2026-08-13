@@ -89,6 +89,8 @@ export function MorphText({
           fontWeight: 700,
           filter: `url(#${filterId})`,
           fontFamily,
+          transform: "translateZ(0)",
+          willChange: "filter",
         }}
       >
         {/* word rotator */}
@@ -103,7 +105,9 @@ export function MorphText({
               style={{
                 top: "50%",
                 left: "50%",
-                transform: "translate(-50%, -50%)",
+                transform: "translate(-50%, -50%) translateZ(0)",
+                willChange: "transform, opacity, filter",
+                backfaceVisibility: "hidden",
                 opacity: 0,
                 whiteSpace: "nowrap",
                 animationName: "morph-word-rotate",
@@ -143,7 +147,7 @@ export function MorphText({
           0% {
             opacity: 0;
             filter: blur(20px);
-            transform: translate(-50%, -50%) scale(0.8);
+            transform: translate(-50%, -50%) scale(0.8) translateZ(0);
           }
           5% {
             opacity: 0.5;
@@ -152,7 +156,7 @@ export function MorphText({
           15%, 35% {
             opacity: 1;
             filter: blur(0px);
-            transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(1) translateZ(0);
           }
           45% {
             opacity: 0.5;
@@ -161,7 +165,7 @@ export function MorphText({
           50%, 100% {
             opacity: 0;
             filter: blur(20px);
-            transform: translate(-50%, -50%) scale(1.2);
+            transform: translate(-50%, -50%) scale(1.2) translateZ(0);
           }
         }
 

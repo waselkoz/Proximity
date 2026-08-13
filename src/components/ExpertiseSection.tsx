@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, MotionValue } from 'framer-motion';
 import { Code2, Palette, Film, Sparkles, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -249,7 +250,13 @@ function TimelineNode({
             !isEven ? "md:col-start-2 md:ml-16" : "md:col-start-1 md:mr-16"
           )}
         >
-          <img src={step.image} alt={step.title || "Timeline Image"} className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700 ease-out" />
+          <Image 
+            src={step.image} 
+            alt={step.title || "Timeline Image"} 
+            fill 
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover object-top hover:scale-105 transition-transform duration-700 ease-out" 
+          />
         </motion.div>
       )}
 
@@ -362,13 +369,13 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
 
       {/* THE CORE (Singularity Background) */}
       <motion.div 
-        style={{ scale: coreScale, opacity: coreOpacity, rotate: coreRotate }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] pointer-events-none z-0 mix-blend-screen flex items-center justify-center"
+        style={{ scale: coreScale, opacity: coreOpacity, rotate: coreRotate, willChange: "transform, opacity" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] pointer-events-none z-0 mix-blend-screen flex items-center justify-center transform-gpu"
       >
-        <div className="absolute w-[20%] h-[20%] bg-black rounded-full shadow-[0_0_120px_100px_rgba(220,20,60,0.9)] z-10" />
-        <div className="absolute w-full h-full rounded-full border-[2px] border-[#DC143C]/20 border-t-[#DC143C]/80 shadow-[inset_0_0_100px_rgba(220,20,60,0.3)] blur-[4px]" />
-        <div className="absolute w-[70%] h-[70%] rounded-full border-[1px] border-white/10 border-l-white/40 shadow-[0_0_80px_rgba(255,255,255,0.1)] blur-[2px] -rotate-45" />
-        <div className="absolute w-[40%] h-[40%] rounded-full border-[3px] border-[#DC143C]/30 border-b-[#DC143C] shadow-[0_0_50px_rgba(220,20,60,0.6)] blur-[1px] rotate-90" />
+        <div className="absolute w-[20%] h-[20%] bg-black rounded-full shadow-[0_0_120px_100px_rgba(220,20,60,0.9)] z-10 transform-gpu" />
+        <div className="absolute w-full h-full rounded-full border-[2px] border-[#DC143C]/20 border-t-[#DC143C]/80 shadow-[inset_0_0_100px_rgba(220,20,60,0.3)] blur-[4px] transform-gpu" style={{ willChange: "filter" }} />
+        <div className="absolute w-[70%] h-[70%] rounded-full border-[1px] border-white/10 border-l-white/40 shadow-[0_0_80px_rgba(255,255,255,0.1)] blur-[2px] -rotate-45 transform-gpu" style={{ willChange: "filter" }} />
+        <div className="absolute w-[40%] h-[40%] rounded-full border-[3px] border-[#DC143C]/30 border-b-[#DC143C] shadow-[0_0_50px_rgba(220,20,60,0.6)] blur-[1px] rotate-90 transform-gpu" style={{ willChange: "filter" }} />
       </motion.div>
 
       {/* MASSIVE BACKGROUND TEXT */}
@@ -431,7 +438,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-10 w-[94%] md:w-[70%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[150px] rounded-full z-0 pointer-events-none" />
+            <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.1} className="relative z-10 min-h-[350px] md:min-h-[400px]">
               <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60" durationMultiplier={1.5} />
 
@@ -478,7 +485,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-20 w-[96%] md:w-[80%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-white/5 blur-[150px] rounded-full z-0 pointer-events-none" />
+            <div className="absolute -inset-32 bg-white/5 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.3} className="relative z-10 min-h-[350px] md:min-h-[400px]">
               <GraphicDesignUI />
 
@@ -525,7 +532,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-30 w-[98%] md:w-[90%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[150px] rounded-full z-0 pointer-events-none" />
+            <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.5} className="relative z-10 min-h-[400px] md:min-h-[450px]">
               <VideoEditingUI />
 
