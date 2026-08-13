@@ -249,6 +249,7 @@ function TimelineNode({
             "w-[calc(100%-4rem)] ml-16 md:w-full md:ml-0 max-h-[200px] md:max-h-[300px] rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(220,20,60,0.15)] border border-white/10 relative z-10 md:row-start-1 mt-6 md:mt-0",
             !isEven ? "md:col-start-2 md:ml-16" : "md:col-start-1 md:mr-16"
           )}
+        >
           <Image 
             src={step.image} 
             alt={step.title || "Timeline Image"} 
@@ -370,7 +371,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
       {/* THE CORE (Singularity Background) */}
       <motion.div 
         style={{ scale: coreScale, opacity: coreOpacity, rotate: coreRotate, willChange: "transform, opacity" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] pointer-events-none z-0 mix-blend-screen flex items-center justify-center transform-gpu"
+        className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] pointer-events-none z-0 mix-blend-screen items-center justify-center transform-gpu"
       >
         <div className="absolute w-[20%] h-[20%] bg-black rounded-full shadow-[0_0_120px_100px_rgba(220,20,60,0.9)] z-10 transform-gpu" />
         <div className="absolute w-full h-full rounded-full border-[2px] border-[#DC143C]/20 border-t-[#DC143C]/80 shadow-[inset_0_0_100px_rgba(220,20,60,0.3)] blur-[4px] transform-gpu" style={{ willChange: "filter" }} />
