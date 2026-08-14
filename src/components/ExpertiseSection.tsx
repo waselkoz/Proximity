@@ -461,7 +461,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
       </div>
 
       {/* Timeline Style Cards Section */}
-      <div className="relative w-full flex flex-col gap-8 md:gap-10 z-30 pb-48 pt-12 overflow-hidden">
+      <div id="cards" className="relative w-full flex flex-col gap-8 md:gap-10 z-30 pb-48 pt-12 overflow-hidden scroll-mt-24">
         
         {/* The Platform (Vertical Line) */}
         <div className="absolute left-[15px] md:left-[12vw] top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#DC143C] to-transparent shadow-[0_0_15px_rgba(220,20,60,0.8)] z-0" />

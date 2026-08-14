@@ -48,7 +48,7 @@ export default function HeroSection({ lang = "en" }: { lang?: string }) {
             
             {/* CTA Button */}
             <a 
-              href="#services" 
+              href="#cards" 
               className="mt-12 group relative flex items-center justify-center overflow-hidden p-[1px]"
             >
               <div className="relative bg-[#050505] border border-white/20 group-hover:border-[#DC143C] px-10 py-4 flex items-center gap-4 transition-all duration-300">
