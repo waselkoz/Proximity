@@ -90,7 +90,7 @@ export default function CtaSection({ lang = "en" }: { lang?: string }) {
         </div>
 
         {/* Right Side: Form */}
-        <div className="flex-1 w-full max-w-md bg-black/60 backdrop-blur-2xl border border-white/10 p-8 rounded-3xl shadow-2xl">
+        <div className="flex-1 w-full max-w-md bg-black/95 md:bg-black/60 md:backdrop-blur-2xl border border-white/10 p-8 rounded-3xl shadow-2xl">
           {status === "success" ? (
             <div className="flex flex-col items-center justify-center py-12 text-center animate-in fade-in zoom-in duration-500">
               <CheckCircle2 className="w-16 h-16 text-[#DC143C] mb-4" />
@@ -108,8 +108,10 @@ export default function CtaSection({ lang = "en" }: { lang?: string }) {
               <div>
                 <label className="block text-sm font-medium text-white/70 mb-1">{t("Name", "Nom")}</label>
                 <input 
+                  type="text"
+                  autoComplete="name"
                   {...register("name")}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#DC143C]/50 transition-all"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#DC143C]/50 transition-all"
                   placeholder={t("John Doe", "Jean Dupont")}
                 />
                 {errors.name && <p className="text-[#DC143C] text-xs mt-1">{errors.name.message}</p>}
@@ -118,8 +120,11 @@ export default function CtaSection({ lang = "en" }: { lang?: string }) {
               <div>
                 <label className="block text-sm font-medium text-white/70 mb-1">{t("Email", "E-mail")}</label>
                 <input 
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
                   {...register("email")}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#DC143C]/50 transition-all"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#DC143C]/50 transition-all"
                   placeholder={t("john@example.com", "jean@exemple.com")}
                 />
                 {errors.email && <p className="text-[#DC143C] text-xs mt-1">{errors.email.message}</p>}
@@ -130,7 +135,7 @@ export default function CtaSection({ lang = "en" }: { lang?: string }) {
                 <textarea 
                   {...register("message")}
                   rows={4}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#DC143C]/50 transition-all resize-none"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#DC143C]/50 transition-all resize-none"
                   placeholder={t("Tell us about your project...", "Parlez-nous de votre projet...")}
                 />
                 {errors.message && <p className="text-[#DC143C] text-xs mt-1">{errors.message.message}</p>}

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 
 const CODE_FRAGMENTS = [
@@ -10,8 +11,16 @@ const CODE_FRAGMENTS = [
 ];
 
 export default function CodeRain({ className = "", durationMultiplier = 1 }: { className?: string, durationMultiplier?: number }) {
+  const [isMobile, setIsMobile] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
+  if (isMobile) return null;
+
   return (
-    <div className={`hidden md:block absolute inset-0 overflow-hidden pointer-events-none z-0 ${className}`}>
+    <div className={`absolute inset-0 overflow-hidden pointer-events-none z-0 ${className}`}>
       {CODE_FRAGMENTS.map((text, i) => (
         <motion.div
           key={i}

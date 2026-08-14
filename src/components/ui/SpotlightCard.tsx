@@ -16,34 +16,15 @@ export default function SpotlightCard({
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // For 3D Tilt
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const springConfig = { damping: 20, stiffness: 100, mass: 0.5 };
-  const smoothX = useSpring(x, springConfig);
-  const smoothY = useSpring(y, springConfig);
-
-  const rotateX = useTransform(smoothY, [-250, 250], [10, -10]);
-  const rotateY = useTransform(smoothX, [-250, 250], [-10, 10]);
-
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect();
     
     // Spotlight
     mouseX.set(e.clientX - rect.left);
     mouseY.set(e.clientY - rect.top);
-
-    // 3D Tilt
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    x.set(e.clientX - rect.left - centerX);
-    y.set(e.clientY - rect.top - centerY);
   }
 
   function handleMouseLeave() {
-    x.set(0);
-    y.set(0);
   }
 
   return (
@@ -59,9 +40,6 @@ export default function SpotlightCard({
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
           clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 100%, 0 100%)"
         }}
         className="relative w-full h-full transition-all duration-300 ease-out group/card group-hover/grid:opacity-50 hover:!opacity-100 p-[1px] bg-white/10"
@@ -71,7 +49,7 @@ export default function SpotlightCard({
           style={{ clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 100%, 0 100%)" }}
         >
         {/* Dark frosted glass background */}
-        <div className="absolute inset-0 bg-white/[0.02] backdrop-blur-3xl" style={{ transform: "translateZ(0)" }} />
+        <div className="absolute inset-0 bg-[#0F0F0F] md:bg-white/[0.02] md:backdrop-blur-3xl" style={{ transform: "translateZ(0)" }} />
         
         {/* Outer Crimson Glow Spotlight */}
         <motion.div
@@ -103,10 +81,9 @@ export default function SpotlightCard({
           }}
         />
         
-        {/* Main Card Body (Popped out in 3D!) */}
+        {/* Main Card Body */}
         <div 
           className="relative w-full h-full p-5 md:p-8 pr-12 md:pr-20 flex flex-col pointer-events-none"
-          style={{ transform: "translateZ(40px)", transformStyle: "preserve-3d" }}
         >
           <div className="pointer-events-auto h-full flex flex-col max-w-7xl mx-auto w-full">
             {children}

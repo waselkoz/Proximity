@@ -11,7 +11,7 @@ export default function HeroSection({ lang = "en" }: { lang?: string }) {
   const t = (en: string, fr: string) => lang === "fr" ? fr : en;
 
   return (
-    <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white">
+    <section className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-white">
       <LightLines
         gradientFrom="#ffffff"
         gradientTo="#ffffff"

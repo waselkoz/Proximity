@@ -74,9 +74,6 @@ export function LightLines({
         const container = containerRef.current;
         if (!container) return;
 
-        const isMobile = window.matchMedia("(max-width: 768px)").matches;
-        if (isMobile) return;
-
         // Initialize animations
         const allLights = [...lightsDown, ...lightsUp];
         animationsRef.current = allLights.map((light) => {
@@ -132,7 +129,7 @@ export function LightLines({
             }}
         >
             <svg
-                className="hidden md:block absolute h-full w-[800px] md:w-full"
+                className="absolute h-full w-[800px] md:w-full"
                 xmlns="http://www.w3.org/2000/svg"
                 x="0px"
                 y="0px"

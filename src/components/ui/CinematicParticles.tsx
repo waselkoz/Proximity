@@ -10,10 +10,12 @@ export default function CinematicParticles({ scrollYProgress }: { scrollYProgres
 
   const [mounted, setMounted] = useState(false);
   const [dustParticles, setDustParticles] = useState<any[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    const particleCount = isMobile ? 5 : 30;
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
+    const particleCount = mobile ? 5 : 30;
     
     setDustParticles(
       Array.from({ length: particleCount }).map(() => ({
@@ -29,9 +31,13 @@ export default function CinematicParticles({ scrollYProgress }: { scrollYProgres
   return (
     <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
       {/* Huge Out of Focus Orbs */}
-      <motion.div style={{ y: y1, willChange: "transform, filter" }} className="hidden md:block absolute top-[20%] left-[5%] w-[400px] h-[400px] bg-[#DC143C]/20 rounded-full blur-[120px] transform-gpu" />
-      <motion.div style={{ y: y2, willChange: "transform, filter" }} className="hidden md:block absolute top-[60%] right-[5%] w-[500px] h-[500px] bg-white/5 rounded-full blur-[150px] transform-gpu" />
-      <motion.div style={{ y: y3, willChange: "transform, filter" }} className="hidden md:block absolute bottom-[10%] left-[20%] w-[300px] h-[300px] bg-[#DC143C]/10 rounded-full blur-[100px] transform-gpu" />
+      {!isMobile && (
+        <>
+          <motion.div style={{ y: y1, willChange: "transform, filter" }} className="absolute top-[20%] left-[5%] w-[400px] h-[400px] bg-[#DC143C]/20 rounded-full blur-[120px] transform-gpu" />
+          <motion.div style={{ y: y2, willChange: "transform, filter" }} className="absolute top-[60%] right-[5%] w-[500px] h-[500px] bg-white/5 rounded-full blur-[150px] transform-gpu" />
+          <motion.div style={{ y: y3, willChange: "transform, filter" }} className="absolute bottom-[10%] left-[20%] w-[300px] h-[300px] bg-[#DC143C]/10 rounded-full blur-[100px] transform-gpu" />
+        </>
+      )}
       
       {/* Tiny Dust Particles */}
       {mounted && dustParticles.map((p, i) => (

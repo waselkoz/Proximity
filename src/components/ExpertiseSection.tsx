@@ -12,7 +12,8 @@ import CinematicParticles from '@/components/ui/CinematicParticles';
 
 // Local CodeRain removed, using global CodeRain from @/components/ui/CodeRain
 
-function GraphicDesignUI() {
+function GraphicDesignUI({ isMobile }: { isMobile?: boolean }) {
+  if (isMobile) return null;
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60 font-mono text-xs">
       
@@ -88,7 +89,8 @@ const KEYFRAMES = [
   { top: "70%", right: "8%" },
 ];
 
-function VideoEditingUI() {
+function VideoEditingUI({ isMobile }: { isMobile?: boolean }) {
+  if (isMobile) return null;
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60 font-mono text-xs">
       
@@ -255,7 +257,7 @@ function TimelineNode({
             alt={step.title || "Timeline Image"} 
             width={800}
             height={600}
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 768px) 90vw, 50vw"
             className="w-full h-auto object-cover object-top hover:scale-105 transition-transform duration-700 ease-out" 
           />
         </motion.div>
@@ -319,6 +321,12 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
   const t = (en: string, fr: string) => lang === "fr" ? fr : en;
 
   const containerRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
@@ -350,7 +358,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
     <motion.section 
       id="services"
       ref={containerRef} 
-      style={{ 
+      style={isMobile ? {} : { 
         scale: sectionScale, 
         y: sectionY,
         borderTopLeftRadius: sectionBorderRadius,
@@ -439,7 +447,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-10 w-[94%] md:w-[70%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[50px] md:blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
+            <div className="hidden md:block absolute -inset-32 bg-[#DC143C]/10 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.1} className="relative z-10 min-h-[350px] md:min-h-[400px]">
               <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60" durationMultiplier={1.5} />
 
@@ -486,9 +494,9 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-20 w-[96%] md:w-[80%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-white/5 blur-[50px] md:blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
+            <div className="hidden md:block absolute -inset-32 bg-white/5 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.3} className="relative z-10 min-h-[350px] md:min-h-[400px]">
-              <GraphicDesignUI />
+              <GraphicDesignUI isMobile={isMobile} />
 
               <div className="relative z-10 flex flex-col mb-4 md:mb-6">
                 <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_40px_rgba(220,20,60,0.3)] transition-all duration-500 mb-4">
@@ -533,9 +541,9 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-30 w-[98%] md:w-[90%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[50px] md:blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
+            <div className="hidden md:block absolute -inset-32 bg-[#DC143C]/15 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.5} className="relative z-10 min-h-[400px] md:min-h-[450px]">
-              <VideoEditingUI />
+              <VideoEditingUI isMobile={isMobile} />
 
               <div className="relative z-10 flex flex-col max-w-4xl flex-grow items-center text-center">
                 <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center border border-white/10 group-hover:border-[#DC143C]/50 group-hover:shadow-[0_0_50px_rgba(220,20,60,0.3)] transition-all duration-500 mb-4 md:mb-6 mt-2 md:mt-4">
