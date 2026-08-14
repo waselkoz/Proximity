@@ -35,7 +35,8 @@ export function NotchNavbar({ className, lang = "en", ...props }: React.HTMLAttr
   }
 
   // Development page specific navigation
-  if (pathname === `/${lang}/development`) {
+  const isDevelopmentPage = pathname.includes('/development');
+  if (isDevelopmentPage) {
     items = {
       left: [
         { label: t("Home", "Accueil"), href: `/${lang}`, icon: Home },
@@ -47,6 +48,8 @@ export function NotchNavbar({ className, lang = "en", ...props }: React.HTMLAttr
       ]
     }
   }
+
+  const contactHref = isDevelopmentPage ? "#pricing" : (pathname === `/${lang}` ? "#contact" : `/${lang}#contact`);
 
   return (
     <>
@@ -135,7 +138,7 @@ export function NotchNavbar({ className, lang = "en", ...props }: React.HTMLAttr
                     </Link>
                   </div>
                   
-                  <Link href="#contact" className="px-4 py-1.5 text-sm font-medium text-white bg-primary rounded-2xl hover:bg-primary-light transition-colors shadow-sm whitespace-nowrap">
+                  <Link href={contactHref} className="px-4 py-1.5 text-sm font-medium text-white bg-primary rounded-2xl hover:bg-primary-light transition-colors shadow-sm whitespace-nowrap">
                     {t("Let's Talk", "Discutons")}
                   </Link>
                 </div>
@@ -209,7 +212,7 @@ export function NotchNavbar({ className, lang = "en", ...props }: React.HTMLAttr
                     </Link>
                  </div>
                  <Link 
-                    href="#contact" 
+                    href={contactHref} 
                     className="flex items-center justify-center gap-2 p-3 rounded-lg bg-primary text-white font-medium mt-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                  >
