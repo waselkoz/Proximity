@@ -13,31 +13,6 @@ export default function HeroSection({ lang = "en" }: { lang?: string }) {
 
   return (
     <section className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-white">
-      {/* Cinematic Mobile Background (Hardware Accelerated) */}
-      <div className="md:hidden absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute inset-0 bg-cover bg-center transform-gpu"
-          style={{ backgroundImage: "url('/aa.jpg')", willChange: "transform, opacity" }}
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.8, 0, 0.8],
-          }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute inset-0 bg-cover bg-center transform-gpu"
-          style={{ backgroundImage: "url('/aaa.jpeg')", willChange: "transform, opacity" }}
-          animate={{
-            scale: [1.1, 1, 1.1],
-            opacity: [0, 0.8, 0],
-          }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-        />
-        
-        {/* Elegant gradient overlay to protect text legibility without heavy CSS blur */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/60 to-white/95" />
-      </div>
-
       <LightLines
         gradientFrom="#ffffff"
         gradientTo="#ffffff"

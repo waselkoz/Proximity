@@ -373,6 +373,31 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           style={{ opacity: overlayOpacity }}
         />
       )}
+
+      {/* Innovative Mobile Backgrounds Behind Cards */}
+      <div className="md:hidden absolute inset-0 z-0 pointer-events-none">
+        {/* Top Image (aa.jpg) */}
+        <div className="absolute top-0 left-0 w-full h-[55%] overflow-hidden">
+          <motion.div
+            className="absolute inset-0 bg-cover bg-center transform-gpu"
+            style={{ backgroundImage: "url('/aa.jpg')", willChange: "transform, opacity" }}
+            animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.5, 0.25] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/30 via-[#000000]/70 to-[#000000]" />
+        </div>
+
+        {/* Bottom Image (aaa.jpeg) */}
+        <div className="absolute bottom-0 left-0 w-full h-[55%] overflow-hidden">
+          <motion.div
+            className="absolute inset-0 bg-cover bg-center transform-gpu"
+            style={{ backgroundImage: "url('/aaa.jpeg')", willChange: "transform, opacity" }}
+            animate={{ scale: [1.15, 1, 1.15], opacity: [0.25, 0.5, 0.25] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/30 via-[#000000]/70 to-[#000000]" />
+        </div>
+      </div>
       
       {/* CINEMATIC BARS */}
       <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-black via-black/80 to-transparent z-40 pointer-events-none" />
