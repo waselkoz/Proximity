@@ -41,11 +41,11 @@ export default function SpotlightCard({
         className="relative w-full h-full transition-all duration-300 ease-out group/card group-hover/grid:opacity-50 hover:!opacity-100 p-[1px] bg-white/10"
       >
         <div 
-          className="relative w-full h-full bg-[#0A0A0A] overflow-hidden"
+          className="relative w-full h-full bg-black/40 md:bg-[#0A0A0A] overflow-hidden"
           style={{ clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 100%, 0 100%)" }}
         >
         {/* Dark frosted glass background */}
-        <div className="absolute inset-0 bg-[#0F0F0F] md:bg-white/[0.02] md:backdrop-blur-3xl" style={{ transform: "translateZ(0)" }} />
+        <div className="absolute inset-0 bg-transparent md:bg-white/[0.02] md:backdrop-blur-3xl" style={{ transform: "translateZ(0)" }} />
         
         {/* Outer Crimson Glow Spotlight */}
         <motion.div
