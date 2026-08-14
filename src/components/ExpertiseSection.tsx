@@ -367,29 +367,33 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
       className="relative w-full bg-[#000000] py-32 md:py-48 flex flex-col items-center overflow-hidden z-20 shadow-[0_-30px_80px_rgba(0,0,0,0.1)] scroll-mt-16"
     >
       {/* Fog Reveal Overlay */}
-      <motion.div 
-        className="absolute inset-0 bg-white z-50 pointer-events-none"
-        style={{ opacity: overlayOpacity }}
-      />
+      {!isMobile && (
+        <motion.div 
+          className="absolute inset-0 bg-white z-50 pointer-events-none"
+          style={{ opacity: overlayOpacity }}
+        />
+      )}
       
       {/* CINEMATIC BARS */}
       <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-black via-black/80 to-transparent z-40 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-black via-black/80 to-transparent z-40 pointer-events-none" />
 
       {/* THE CORE (Singularity Background) */}
-      <motion.div 
-        style={{ scale: coreScale, opacity: coreOpacity, rotate: coreRotate, willChange: "transform, opacity" }}
-        className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] pointer-events-none z-0 mix-blend-screen items-center justify-center transform-gpu"
-      >
-        <div className="absolute w-[20%] h-[20%] bg-black rounded-full shadow-[0_0_120px_100px_rgba(220,20,60,0.9)] z-10 transform-gpu" />
-        <div className="absolute w-full h-full rounded-full border-[2px] border-[#DC143C]/20 border-t-[#DC143C]/80 shadow-[inset_0_0_100px_rgba(220,20,60,0.3)] blur-[4px] transform-gpu" style={{ willChange: "filter" }} />
-        <div className="absolute w-[70%] h-[70%] rounded-full border-[1px] border-white/10 border-l-white/40 shadow-[0_0_80px_rgba(255,255,255,0.1)] blur-[2px] -rotate-45 transform-gpu" style={{ willChange: "filter" }} />
-        <div className="absolute w-[40%] h-[40%] rounded-full border-[3px] border-[#DC143C]/30 border-b-[#DC143C] shadow-[0_0_50px_rgba(220,20,60,0.6)] blur-[1px] rotate-90 transform-gpu" style={{ willChange: "filter" }} />
-      </motion.div>
+      {!isMobile && (
+        <motion.div 
+          style={{ scale: coreScale, opacity: coreOpacity, rotate: coreRotate, willChange: "transform, opacity" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] pointer-events-none z-0 mix-blend-screen items-center justify-center transform-gpu"
+        >
+          <div className="absolute w-[20%] h-[20%] bg-black rounded-full shadow-[0_0_120px_100px_rgba(220,20,60,0.9)] z-10 transform-gpu" />
+          <div className="absolute w-full h-full rounded-full border-[2px] border-[#DC143C]/20 border-t-[#DC143C]/80 shadow-[inset_0_0_100px_rgba(220,20,60,0.3)] blur-[4px] transform-gpu" style={{ willChange: "filter" }} />
+          <div className="absolute w-[70%] h-[70%] rounded-full border-[1px] border-white/10 border-l-white/40 shadow-[0_0_80px_rgba(255,255,255,0.1)] blur-[2px] -rotate-45 transform-gpu" style={{ willChange: "filter" }} />
+          <div className="absolute w-[40%] h-[40%] rounded-full border-[3px] border-[#DC143C]/30 border-b-[#DC143C] shadow-[0_0_50px_rgba(220,20,60,0.6)] blur-[1px] rotate-90 transform-gpu" style={{ willChange: "filter" }} />
+        </motion.div>
+      )}
 
       {/* MASSIVE BACKGROUND TEXT */}
       <motion.div 
-        style={{ y: bgTextY }}
+        style={{ y: isMobile ? 0 : bgTextY }}
         className="absolute top-[30%] left-0 w-full flex justify-center pointer-events-none z-0 opacity-10"
       >
         <h1 className="text-[20vw] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-black tracking-tighter leading-none select-none">
@@ -398,7 +402,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
       </motion.div>
       
       {/* Noise and Film Grain */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06] mix-blend-overlay z-50 pointer-events-none" />
+      <div className="hidden md:block absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06] mix-blend-overlay z-50 pointer-events-none" />
       
       {/* Floating Particles */}
       <CinematicParticles scrollYProgress={smoothProgress} />
