@@ -29,10 +29,6 @@ export default function SpotlightCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "100px" }}
-      transition={{ duration: 0.4, delay: delay * 0.5, ease: [0.22, 1, 0.36, 1] }}
       style={{ perspective: 2000 }}
       className={cn("w-full h-full cursor-pointer group drop-shadow-[0_10px_40px_rgba(0,0,0,0.8)]", className)}
     >
