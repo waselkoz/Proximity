@@ -374,25 +374,28 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
         />
       )}
 
-      {/* Innovative Mobile Backgrounds Behind Cards */}
+      {/* Lightweight High-Tech Grid Background */}
       <div className="md:hidden absolute inset-0 z-0 pointer-events-none">
-        {/* Top Image (aa.jpg) */}
-        <div className="absolute top-0 left-0 w-full h-[55%] overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/aa.jpg')", opacity: 0.9 }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#000000]" />
-        </div>
-
-        {/* Bottom Image (aaa.jpeg) */}
-        <div className="absolute bottom-0 left-0 w-full h-[55%] overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/aaa.jpeg')", opacity: 0.9 }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[#000000]" />
-        </div>
+        {/* CSS-only Grid - Zero GPU Cost */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)'
+          }}
+        />
+        
+        {/* Static Neon Accent Lines */}
+        <div className="absolute top-[25%] left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#DC143C]/40 to-transparent shadow-[0_0_10px_rgba(220,20,60,0.5)]" />
+        <div className="absolute top-[75%] left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#DC143C]/20 to-transparent shadow-[0_0_10px_rgba(220,20,60,0.3)]" />
+        
+        {/* Vertical Accent Line */}
+        <div className="absolute top-[10%] bottom-[10%] left-[20px] w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
       </div>
       
       {/* CINEMATIC BARS */}
