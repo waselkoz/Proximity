@@ -127,6 +127,17 @@ export default function DevelopmentPage(props: { params: Promise<{ lang: string 
           </div>
 
           <HowWeOperateSteps lang={lang} />
+          
+          <div className="mt-16 flex justify-center">
+            <Link href="#pricing">
+              <div className="group relative flex items-center justify-center overflow-hidden p-[1px]">
+                <div className="relative bg-[#DC143C] border border-[#DC143C] hover:border-[#ff4d6d] px-10 py-4 flex items-center gap-4 transition-all duration-300 hover:bg-[#ff4d6d]">
+                  <span className="text-lg md:text-xl font-bold text-white tracking-widest uppercase relative z-10">{t("Contact Us", "Contactez nous")}</span>
+                  <svg className="w-5 h-5 text-white relative z-10 group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+              </div>
+            </Link>
+          </div>
         </motion.div>
 
         <FeedbackLoop lang={lang} />
@@ -187,6 +198,16 @@ export default function DevelopmentPage(props: { params: Promise<{ lang: string 
                   <div className="absolute inset-0 bg-[#DC143C]/10 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                   <span className="text-xl md:text-2xl font-bold text-white tracking-widest uppercase relative z-10">{t("Access Portfolio", "Accéder au Portfolio")}</span>
                   <svg className="w-6 h-6 text-[#DC143C] relative z-10 group-hover:translate-x-2 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+              </div>
+            </Link>
+            
+            {/* Contact Us CTA */}
+            <Link href="#pricing" className="mt-6">
+              <div className="group relative flex items-center justify-center overflow-hidden p-[1px]">
+                <div className="relative bg-transparent border border-[#DC143C] hover:bg-[#DC143C]/10 px-10 py-4 flex items-center gap-4 transition-all duration-300">
+                  <span className="text-lg md:text-xl font-bold text-[#DC143C] tracking-widest uppercase relative z-10">{t("Contact Us", "Contactez nous")}</span>
+                  <svg className="w-5 h-5 text-[#DC143C] relative z-10 group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </div>
               </div>
             </Link>

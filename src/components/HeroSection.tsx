@@ -35,7 +35,7 @@ export default function HeroSection({ lang = "en" }: { lang?: string }) {
           </div>
 
           {/* Morphing Text Hero */}
-          <div className="w-full max-w-4xl mx-auto">
+          <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
             <MorphText 
               words={
                 lang === "fr" 
@@ -45,6 +45,18 @@ export default function HeroSection({ lang = "en" }: { lang?: string }) {
               subtext={t("Driving the future of digital experiences", "Conduire l'avenir des expériences numériques")}
               fontSize="clamp(2.5rem, 8vw, 6rem)"
             />
+            
+            {/* CTA Button */}
+            <a 
+              href="#services" 
+              className="mt-12 group relative flex items-center justify-center overflow-hidden p-[1px]"
+            >
+              <div className="relative bg-[#050505] border border-white/20 group-hover:border-[#DC143C] px-10 py-4 flex items-center gap-4 transition-all duration-300">
+                <div className="absolute inset-0 bg-[#DC143C]/10 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <span className="text-lg md:text-xl font-bold text-white tracking-widest uppercase relative z-10">{t("View Services", "Voir Nos Services")}</span>
+                <svg className="w-5 h-5 text-[#DC143C] relative z-10 group-hover:translate-y-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+              </div>
+            </a>
           </div>
           
         </div>
