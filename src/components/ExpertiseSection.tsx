@@ -381,10 +381,10 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           <motion.div
             className="absolute inset-0 bg-cover bg-center transform-gpu"
             style={{ backgroundImage: "url('/aa.jpg')", willChange: "transform, opacity" }}
-            animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.5, 0.25] }}
+            animate={{ scale: [1, 1.15, 1], opacity: [0.6, 1, 0.6] }}
             transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/30 via-[#000000]/70 to-[#000000]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#000000]/50 to-[#000000]" />
         </div>
 
         {/* Bottom Image (aaa.jpeg) */}
@@ -392,10 +392,10 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           <motion.div
             className="absolute inset-0 bg-cover bg-center transform-gpu"
             style={{ backgroundImage: "url('/aaa.jpeg')", willChange: "transform, opacity" }}
-            animate={{ scale: [1.15, 1, 1.15], opacity: [0.25, 0.5, 0.25] }}
+            animate={{ scale: [1.15, 1, 1.15], opacity: [0.6, 1, 0.6] }}
             transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/30 via-[#000000]/70 to-[#000000]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-[#000000]/50 to-[#000000]" />
         </div>
       </div>
       
