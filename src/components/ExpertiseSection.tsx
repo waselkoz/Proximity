@@ -358,13 +358,13 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
     <motion.section 
       id="services"
       ref={containerRef} 
-      style={isMobile ? {} : { 
+      style={{ 
         scale: sectionScale, 
         y: sectionY,
         borderTopLeftRadius: sectionBorderRadius,
         borderTopRightRadius: sectionBorderRadius,
       }}
-      className="relative w-full bg-[#000000] py-32 md:py-48 flex flex-col items-center overflow-hidden z-20 shadow-[0_-30px_80px_rgba(0,0,0,0.1)] scroll-mt-16"
+      className="relative w-full bg-[#000000] py-32 md:py-48 flex flex-col items-center overflow-hidden z-20 shadow-[0_-30px_80px_rgba(0,0,0,0.1)] scroll-mt-16 mobile-no-transform"
     >
       {/* Fog Reveal Overlay */}
       {!isMobile && (
