@@ -439,7 +439,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-10 w-[94%] md:w-[70%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
+            <div className="absolute -inset-32 bg-[#DC143C]/10 blur-[50px] md:blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.1} className="relative z-10 min-h-[350px] md:min-h-[400px]">
               <CodeRain className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60" durationMultiplier={1.5} />
 
@@ -486,7 +486,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-20 w-[96%] md:w-[80%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-white/5 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
+            <div className="absolute -inset-32 bg-white/5 blur-[50px] md:blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.3} className="relative z-10 min-h-[350px] md:min-h-[400px]">
               <GraphicDesignUI />
 
@@ -533,7 +533,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
           className="relative z-30 w-[98%] md:w-[90%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
-            <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
+            <div className="absolute -inset-32 bg-[#DC143C]/15 blur-[50px] md:blur-[150px] rounded-full z-0 pointer-events-none transform-gpu" style={{ willChange: "filter" }} />
             <SpotlightCard delay={0.5} className="relative z-10 min-h-[400px] md:min-h-[450px]">
               <VideoEditingUI />
 

@@ -173,6 +173,30 @@ export function MorphText({
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
+
+        @media (max-width: 768px) {
+          .morph-text-container {
+            filter: none !important;
+          }
+          @keyframes morph-word-rotate {
+            0% {
+              opacity: 0;
+              transform: translate(-50%, -50%) scale(0.9) translateZ(0);
+            }
+            10% {
+              opacity: 1;
+              transform: translate(-50%, -50%) scale(1) translateZ(0);
+            }
+            40% {
+              opacity: 1;
+              transform: translate(-50%, -50%) scale(1) translateZ(0);
+            }
+            50%, 100% {
+              opacity: 0;
+              transform: translate(-50%, -50%) scale(1.1) translateZ(0);
+            }
+          }
+        }
       `}</style>
     </div>
   );
