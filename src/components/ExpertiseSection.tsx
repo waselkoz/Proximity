@@ -444,10 +444,10 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
 
         {/* Card 1: Development - Massive on Top */}
         <motion.div 
-          initial={{ opacity: 0, x: 200 }} 
-          whileInView={{ opacity: 1, x: 0 }} 
-          viewport={{ once: true, margin: "-20%" }} 
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }} 
+          initial={{ opacity: 0, y: 60 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-50px" }} 
+          transition={{ duration: 0.6, ease: "easeOut" }} 
           className="relative z-10 w-[94%] md:w-[70%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
@@ -491,10 +491,10 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
 
         {/* Card 2: Graphic Design */}
         <motion.div 
-          initial={{ opacity: 0, x: 200 }} 
-          whileInView={{ opacity: 1, x: 0 }} 
-          viewport={{ once: true, margin: "-20%" }} 
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }} 
+          initial={{ opacity: 0, y: 60 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-50px" }} 
+          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }} 
           className="relative z-20 w-[96%] md:w-[80%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
@@ -538,10 +538,10 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
 
         {/* Card 3: Video Editing */}
         <motion.div 
-          initial={{ opacity: 0, x: 200 }} 
-          whileInView={{ opacity: 1, x: 0 }} 
-          viewport={{ once: true, margin: "-20%" }} 
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }} 
+          initial={{ opacity: 0, y: 60 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-50px" }} 
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }} 
           className="relative z-30 w-[98%] md:w-[90%] pl-[15px] md:pl-[12vw]"
         >
           <div className="relative w-full h-full group/wrapper">
