@@ -25,7 +25,6 @@ export default function CodeRain({ className = "", durationMultiplier = 1 }: { c
         <motion.div
           key={i}
           className="absolute font-mono font-black whitespace-nowrap"
-          style={{ textShadow: "0 0 8px rgba(220,20,60,0.4)" }}
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 2000, opacity: [0, 1, 1, 0] }}
           transition={{
