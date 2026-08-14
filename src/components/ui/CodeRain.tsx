@@ -11,7 +11,7 @@ const CODE_FRAGMENTS = [
 ];
 
 export default function CodeRain({ className = "", durationMultiplier = 1 }: { className?: string, durationMultiplier?: number }) {
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   
   React.useEffect(() => {
     setIsMobile(window.innerWidth < 768);
@@ -24,7 +24,8 @@ export default function CodeRain({ className = "", durationMultiplier = 1 }: { c
       {CODE_FRAGMENTS.map((text, i) => (
         <motion.div
           key={i}
-          className="absolute font-mono font-black whitespace-nowrap drop-shadow-[0_0_8px_rgba(220,20,60,0.8)]"
+          className="absolute font-mono font-black whitespace-nowrap"
+          style={{ textShadow: "0 0 8px rgba(220,20,60,0.4)" }}
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 2000, opacity: [0, 1, 1, 0] }}
           transition={{
@@ -36,7 +37,8 @@ export default function CodeRain({ className = "", durationMultiplier = 1 }: { c
           style={{ 
             left: `${(i * 13) % 90 + 5}%`,
             fontSize: `${10 + (i % 12)}px`,
-            color: i % 3 === 0 ? 'rgba(220,20,60,0.8)' : (i % 2 === 0 ? 'rgba(255,255,255,0.2)' : 'rgba(220,20,60,0.4)')
+            color: i % 3 === 0 ? 'rgba(220,20,60,0.8)' : (i % 2 === 0 ? 'rgba(255,255,255,0.2)' : 'rgba(220,20,60,0.4)'),
+            textShadow: "0 0 8px rgba(220,20,60,0.4)"
           }}
         >
           {text}

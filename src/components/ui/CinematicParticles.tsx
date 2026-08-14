@@ -10,7 +10,7 @@ export default function CinematicParticles({ scrollYProgress }: { scrollYProgres
 
   const [mounted, setMounted] = useState(false);
   const [dustParticles, setDustParticles] = useState<any[]>([]);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
 
   useEffect(() => {
     const mobile = window.innerWidth < 768;

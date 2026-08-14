@@ -321,7 +321,7 @@ export default function ExpertiseSection({ lang = "en" }: { lang?: string }) {
   const t = (en: string, fr: string) => lang === "fr" ? fr : en;
 
   const containerRef = useRef<HTMLElement>(null);
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   
   React.useEffect(() => {
     setIsMobile(window.innerWidth < 768);

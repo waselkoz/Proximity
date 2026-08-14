@@ -92,8 +92,15 @@ export function LightLines({
             startTime: performance.now() - Math.random() * 5000, // Stagger start times
             currentY: 0,
         }));
+        
+        let isVisible = true;
 
         const animate = (time: number) => {
+            if (!isVisible) {
+                frameRef.current = requestAnimationFrame(animate);
+                return;
+            }
+
             animationsRef.current.forEach((ref, index) => {
                 if (!ref.element) return;
 
@@ -109,8 +116,25 @@ export function LightLines({
         };
 
         frameRef.current = requestAnimationFrame(animate);
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                isVisible = entry.isIntersecting;
+                // Sync animation state start times when becoming visible again so they don't jump
+                if (isVisible) {
+                    const now = performance.now();
+                    animationState.forEach(state => {
+                        // Offset by a random amount to keep the staggered effect
+                        state.startTime = now - Math.random() * 5000;
+                    });
+                }
+            });
+        }, { threshold: 0 });
+        
+        observer.observe(container);
 
         return () => {
+            observer.disconnect();
             if (frameRef.current) {
                 cancelAnimationFrame(frameRef.current);
             }
